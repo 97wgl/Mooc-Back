@@ -14,6 +14,10 @@
  Date: 27/05/2019 16:44:06
 */
 
+create database remote_mooc;
+
+use remote_mooc;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
