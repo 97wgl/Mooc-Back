@@ -7,7 +7,7 @@ spring:
   freemarker:
     cache: false
     check-template-location: true
-    suffix: .ftl  #ºó×ºÃû
+    suffix: .ftl  #æ–‡ä»¶åç¼€
     charset: utf-8
     settings:
       classic_compatible: true
@@ -15,4 +15,7 @@ spring:
       template_update_delay: 0
       datetime_format: yyyy-MM-dd HH:mm
       number_format: 0.##
+
+logging:
+        config: src/main/resources/logback-spring.xml
 
