@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://:3306/remote_mooc?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1234
+  freemarker:
+    cache: false
+    check-template-location: true
+    suffix: .ftl  #บ๓ืบร๛
+    charset: utf-8
+    settings:
+      classic_compatible: true
+      template_exception_handler: rethrow
+      template_update_delay: 0
+      datetime_format: yyyy-MM-dd HH:mm
+      number_format: 0.##
+
