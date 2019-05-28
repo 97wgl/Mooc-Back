@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,6 +51,25 @@ public class TeacherController {
             messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
         }
         return  messageVO.getReturnResult(messageVO);
+    }
+
+
+    @RequestMapping("famous")
+    @ResponseBody
+    public MessageVO<List<Teacher>> famousTeacherList() {
+        QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
+        teacherQueryWrapper.last("limit 5");
+        List<Teacher> list = teacherService.list(teacherQueryWrapper);
+        MessageVO<List<Teacher>> messageVO = new MessageVO<>();
+        if (list.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("当前没有老师！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(list);
+        }
+        return messageVO;
     }
 
 }

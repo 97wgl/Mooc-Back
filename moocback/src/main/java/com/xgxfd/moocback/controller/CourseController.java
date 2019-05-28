@@ -6,6 +6,7 @@ import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/course")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CourseController {
     @Autowired
     CourseService courseService;
@@ -44,6 +46,5 @@ public class CourseController {
         }
         return messageVO;
     }
-
 
 }
