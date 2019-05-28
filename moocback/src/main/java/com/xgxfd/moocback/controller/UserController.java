@@ -2,8 +2,6 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.Teacher;
 import com.xgxfd.moocback.entity.User;
 import com.xgxfd.moocback.service.TeacherService;
@@ -12,12 +10,15 @@ import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,9 +30,13 @@ import java.util.Map;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
+
+
+@CrossOrigin(origins = "*",
+             maxAge = 3600,
+             methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
 @Controller
 @RequestMapping("/user")
-@CrossOrigin(origins = "*", maxAge = 3600, methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 public class UserController {
 
     @Autowired
@@ -89,22 +94,6 @@ public class UserController {
             messageVO = new MessageVO<StringBuffer>(-1,"发送验证码失败",null);
         }
         return messageVO.getReturnResult(messageVO);
-    }
-
-    @GetMapping("/list")
-    @ResponseBody
-    public MessageVO<List<User>> userlist() {
-        /*List<User> list = userService.list();
-        MessageVO<List<User>> messageVO = new MessageVO<>(0, "success", list);
-        return messageVO;*/
-
-        Page<User> userPage = new Page<>();
-        IPage<User> userIPage = userService.page(userPage,new QueryWrapper<User>());
-        List<User> list = userIPage.getRecords();
-        MessageVO<List<User>> messageVO = new MessageVO<>(0, "success", list);
-        return messageVO;
-
-
     }
 
 }
