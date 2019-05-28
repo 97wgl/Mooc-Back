@@ -20,7 +20,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -75,7 +78,12 @@ public class AdminController {
             hostHolder.setUser(admin);//设置hostholder
 
             log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(0,"登录成功",null);
+
+            Map<String,String> map = new HashMap<>();
+            map.put("userInfo",username);
+            map.put("type","admin");
+
+            messageVO = new MessageVO<String>(0,"登录成功",map);
         }else{
             log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
