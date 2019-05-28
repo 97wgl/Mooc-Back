@@ -9,6 +9,7 @@ import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ import java.util.Map;
  * @since 2019-05-27
  */
 
-
+@Slf4j
 @CrossOrigin(origins = "*",
              maxAge = 3600,
              methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
@@ -66,6 +67,7 @@ public class UserController {
                 user.setPwd(CommonUtil.MD5(password));
                 Boolean flag = userService.save(user);
                 if(flag){//注册成功
+                    log.info("用户注册成功。注册人：" + username + "注册时间:" + LocalDateTime.now());
                     messageVO = new MessageVO<String>(0,"注册成功",null);
                 }else{//注册失败
                     messageVO = new MessageVO<String>(-1,"注册失败",null);
@@ -100,8 +102,10 @@ public class UserController {
         User user = userService.getOne(new QueryWrapper<User>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
         MessageVO<String> messageVO;
         if(user != null){//登录成功
+            log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(0,"登录成功",null);
         }else{
+            log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
         }
         return  messageVO.getReturnResult(messageVO);

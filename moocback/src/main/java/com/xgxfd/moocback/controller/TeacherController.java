@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +43,10 @@ public class TeacherController {
         Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
         MessageVO<String> messageVO;
         if(teacher != null){//登录成功
+            log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(0,"登录成功",null);
         }else{
+            log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
         }
         return  messageVO.getReturnResult(messageVO);
