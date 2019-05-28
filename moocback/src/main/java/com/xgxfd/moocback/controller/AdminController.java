@@ -24,6 +24,9 @@ import java.util.List;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
+@CrossOrigin(origins = "*",
+        maxAge = 3600,
+        methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
 @Controller
 @RequestMapping("/admin")
 public class AdminController {

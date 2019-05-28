@@ -9,11 +9,8 @@ import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +25,9 @@ import java.util.Map;
  * @since 2019-05-27
  */
 @Slf4j
+@CrossOrigin(origins = "*",
+        maxAge = 3600,
+        methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
 @Controller
 @RequestMapping("/teacher")
 public class TeacherController {

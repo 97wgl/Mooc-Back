@@ -29,7 +29,9 @@ import java.util.Map;
  */
 
 
-
+@CrossOrigin(origins = "*",
+             maxAge = 3600,
+             methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
 @Controller
 @RequestMapping("/user")
 public class UserController {
