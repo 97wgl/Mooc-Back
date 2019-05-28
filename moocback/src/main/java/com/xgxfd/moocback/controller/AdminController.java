@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.Admin;
+import com.xgxfd.moocback.entity.Teacher;
 import com.xgxfd.moocback.service.AdminService;
+import com.xgxfd.moocback.util.CommonUtil;
+import com.xgxfd.moocback.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -41,6 +41,18 @@ public class AdminController {
       return  adminList.toString();
     }
 
-
+    @PostMapping("/login")
+    @ResponseBody
+    public String userLogin(@RequestParam("username") String username,
+                            @RequestParam("password") String password){
+        Admin admin = adminService.getOne(new QueryWrapper<Admin>().eq("name",username).eq("pwd", CommonUtil.MD5(password)));
+        MessageVO<String> messageVO;
+        if(admin != null){//登录成功
+            messageVO = new MessageVO<String>(0,"登录成功",null);
+        }else{
+            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+        }
+        return  messageVO.getReturnResult(messageVO);
+    }
 
 }

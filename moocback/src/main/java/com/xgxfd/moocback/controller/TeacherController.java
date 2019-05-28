@@ -32,4 +32,21 @@ import java.util.Map;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+    @Autowired
+    TeacherService teacherService;
+
+    @PostMapping("/login")
+    @ResponseBody
+    public String userLogin(@RequestParam("username") String username,
+                            @RequestParam("password") String password){
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
+        MessageVO<String> messageVO;
+        if(teacher != null){//登录成功
+            messageVO = new MessageVO<String>(0,"登录成功",null);
+        }else{
+            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+        }
+        return  messageVO.getReturnResult(messageVO);
+    }
+
 }

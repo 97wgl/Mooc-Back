@@ -10,12 +10,9 @@ import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -30,6 +27,9 @@ import java.util.Map;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
+
+
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -90,5 +90,20 @@ public class UserController {
         }
         return messageVO.getReturnResult(messageVO);
     }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public String userLogin(@RequestParam("username") String username,
+                            @RequestParam("password") String password){
+        User user = userService.getOne(new QueryWrapper<User>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
+        MessageVO<String> messageVO;
+        if(user != null){//登录成功
+            messageVO = new MessageVO<String>(0,"登录成功",null);
+        }else{
+            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+        }
+        return  messageVO.getReturnResult(messageVO);
+    }
+
 
 }
