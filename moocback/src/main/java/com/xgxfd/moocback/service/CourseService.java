@@ -1,7 +1,10 @@
 package com.xgxfd.moocback.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xgxfd.moocback.entity.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-05-27
  */
 public interface CourseService extends IService<Course> {
-
+    List<Course> getCourseInfo();
 }
