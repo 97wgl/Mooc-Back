@@ -59,20 +59,5 @@ public class AdminController {
         }
         return  messageVO.getReturnResult(messageVO);
     }
-//
-//    @PostMapping("/login")
-//    @ResponseBody
-//    public String userLogin(@RequestBody Admin req){
-//        log.info(req.getName());
-//        log.info(req.getPwd());
-//        Admin admin = adminService.getOne(new QueryWrapper<Admin>().eq("name",req.getName()).eq("pwd", CommonUtil.MD5(req.getPwd())));
-//        MessageVO<String> messageVO;
-//        if(admin != null){//登录成功
-//            messageVO = new MessageVO<String>(0,"登录成功",null);
-//        }else{
-//            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
-//        }
-//        return  messageVO.getReturnResult(messageVO);
-//    }
 
 }

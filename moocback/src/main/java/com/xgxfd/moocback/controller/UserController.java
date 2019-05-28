@@ -10,12 +10,9 @@ import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -30,11 +27,9 @@ import java.util.Map;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
-
-
 @CrossOrigin(origins = "*",
-             maxAge = 3600,
-             methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
+        maxAge = 3600,
+        methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
 @Controller
 @RequestMapping("/user")
 public class UserController {
