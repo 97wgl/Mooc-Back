@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://:3306/remote_mooc?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 1234
+    url: jdbc:mysql://111.230.240.26:3306/remote_mooc?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: mooc
+    password: mooc
   freemarker:
     cache: false
     check-template-location: true
