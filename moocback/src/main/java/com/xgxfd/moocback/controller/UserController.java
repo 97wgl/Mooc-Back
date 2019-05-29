@@ -146,9 +146,10 @@ public class UserController {
         return  messageVO.getReturnResult(messageVO);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    //@RequestMapping(method = RequestMethod.GET)
+    @GetMapping("")
     @ResponseBody
-    public String getUser(@RequestParam("u_id") int u_id){
+    public String getUser(@RequestParam("u_id") Integer u_id){
         User user = userService.getById(u_id);
         MessageVO<User> messageVO;
         if(user != null){
