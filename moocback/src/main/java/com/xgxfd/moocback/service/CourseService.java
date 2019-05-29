@@ -3,6 +3,7 @@ package com.xgxfd.moocback.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xgxfd.moocback.entity.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xgxfd.moocback.vo.CourseInfoVO;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ import java.util.List;
  */
 public interface CourseService extends IService<Course> {
     List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper);
+    CourseInfoVO getCourseInfoById(String courseId);
 }
