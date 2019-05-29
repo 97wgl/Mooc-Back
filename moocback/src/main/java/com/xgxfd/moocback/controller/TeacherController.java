@@ -2,8 +2,11 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sun.imageio.plugins.common.I18N;
+import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
+import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.MailSender;
@@ -25,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -45,6 +49,9 @@ public class TeacherController {
 
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     HostHolder hostHolder;
@@ -147,5 +154,51 @@ public class TeacherController {
         }
         return messageVO;
     }
+
+    @PostMapping("/addCourseInfo")
+    @ResponseBody
+    public MessageVO<String> addCourseInfo(@RequestParam("file") MultipartFile picture,
+                                           @RequestParam("teacherId") Integer teacherId,
+                                           @RequestParam("courseName") String courseName,
+                                           @RequestParam("brief") String brief,
+                                           @RequestParam("level") String level,
+                                           @RequestParam("classify") String classify) {
+        MessageVO<String> messageVO = new MessageVO<>();
+        if (picture.isEmpty()) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("未添加图片文件！");
+            return messageVO;
+        }
+        String fileName = picture.getOriginalFilename();
+        String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\image\\";
+        log.info(filePath);
+        File dir = new File(filePath);
+        if(!dir.exists()) {
+            dir.mkdir();
+        }
+        fileName = UUID.randomUUID() + fileName.split(".")[1];
+        File dest = new File(filePath + fileName);
+        try {
+            picture.transferTo(dest);
+            log.info("图片存入成功！");
+            messageVO.setCode(0);
+            messageVO.setMsg("添加成功！");
+        } catch (IOException e) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("添加失败--图片存入异常！" + e.getMessage());
+            log.error(e.toString(), e);
+        }
+        Course course = new Course();
+        course.setBrief(brief);
+        course.setClassify(classify);
+        course.setLevel(level);
+        course.setTeaId(teacherId);
+        course.setName(courseName);
+        course.setPicture("/image/" + fileName);
+        courseService.save(course);
+        return messageVO;
+    }
+
+
 
 }
