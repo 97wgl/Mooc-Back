@@ -95,4 +95,22 @@ public class TeacherController {
         return messageVO;
     }
 
+    @GetMapping("info")
+    @ResponseBody
+    public MessageVO<Teacher> getTeacherInfoByid(@RequestParam("teacherId") String teacherId) {
+        Teacher teacher = teacherService.getById(teacherId);
+        MessageVO<Teacher> messageVO = new MessageVO<>();
+        if (teacher == null) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("查询不到id");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(teacher);
+        }
+
+        return messageVO;
+    }
+
+
 }
