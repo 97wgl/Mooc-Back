@@ -2,6 +2,8 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.vo.MessageVO;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -109,4 +113,31 @@ public class CourseController {
         return messageVO;
     }
 
+    /**
+     * 分页显示课程，每页显示12门课
+     * @param page
+     * @return
+     */
+    @GetMapping("page/{page}")
+    @ResponseBody
+    public MessageVO<Map<String, Object>> allCoursePage(@PathVariable("page") int page) {
+        Page<Course> coursePage = new Page<>(page, 12);
+        IPage<Course> courseIPage = courseService.page(coursePage);
+        List<Course> courseList = courseIPage.getRecords();
+        long totalCourse = courseIPage.getTotal();
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", totalCourse);
+        map.put("list", courseList);
+        MessageVO<Map<String, Object>> messageVO = new MessageVO<>();
+        if (courseList.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("页面参数有误！查询课程失败！");
+            messageVO.setData(map);
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success!");
+            messageVO.setData(map);
+        }
+        return messageVO;
+    }
 }

@@ -16,6 +16,12 @@ spring:
       datetime_format: yyyy-MM-dd HH:mm
       number_format: 0.##
 
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      additional-exclude: WEB-INF/**
+
 logging:
         config: src/main/resources/logback-spring.xml
 
