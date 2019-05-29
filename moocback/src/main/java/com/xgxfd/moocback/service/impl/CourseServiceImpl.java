@@ -6,6 +6,7 @@ import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.mapper.CourseMapper;
 import com.xgxfd.moocback.service.CourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xgxfd.moocback.vo.CourseInfoVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper) {
         return this.baseMapper.getCourseInfo(queryWrapper);
+    }
+
+    @Override
+    public CourseInfoVO getCourseInfoById(String courseId) {
+        return this.baseMapper.getCourseInfoById(courseId);
     }
 }

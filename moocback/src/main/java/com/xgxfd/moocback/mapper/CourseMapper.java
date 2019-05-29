@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xgxfd.moocback.entity.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xgxfd.moocback.vo.CourseInfoVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -26,4 +27,10 @@ public interface CourseMapper extends BaseMapper<Course> {
      */
     @Select("SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC")
     List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper);
+
+    /**
+     * 获取课程评分
+     */
+    @Select("SELECT course.*, ev.score FROM course, (SELECT course_id, AVG(score) score FROM course_evaluation WHERE course_id= #{courseId} GROUP BY course_id) ev WHERE ev.course_id = course.course_id")
+    CourseInfoVO getCourseInfoById(@Param("courseId") String courseId);
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.service.CourseService;
+import com.xgxfd.moocback.vo.CourseInfoVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +144,7 @@ public class CourseController {
 
     @GetMapping("list")
     @ResponseBody
-    public MessageVO<List<Course>> CourseList(@RequestParam("classify") String classify, @RequestParam(value = "tag", required = true) int tag) {
+    public MessageVO<List<Course>> CourseList(@RequestParam("classify") String classify, @RequestParam(value = "tag", required = false) int tag) {
         List<Course> list;
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("classify", classify);
@@ -171,17 +172,17 @@ public class CourseController {
 
     @GetMapping("detail")
     @ResponseBody
-    public MessageVO<Course> courseDetail(@RequestParam("courseId") String courseId) {
-        Course course = courseService.getById(courseId);
-        MessageVO<Course> messageVO = new MessageVO<>();
-        if (course == null) {
+    public MessageVO<CourseInfoVO> courseDetail(@RequestParam("courseId") String courseId) {
+        CourseInfoVO courseInfo = courseService.getCourseInfoById(courseId);
+        MessageVO<CourseInfoVO> messageVO = new MessageVO<>();
+        if (courseInfo == null) {
             messageVO.setCode(-1);
             messageVO.setMsg("不存在该课程！");
             log.info("没有编号为" + courseId + "的课程！");
         } else {
             messageVO.setCode(0);
             messageVO.setMsg("success");
-            messageVO.setData(course);
+            messageVO.setData(courseInfo);
         }
         return messageVO;
     }
