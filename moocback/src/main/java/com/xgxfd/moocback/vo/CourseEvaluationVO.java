@@ -1,7 +1,9 @@
 package com.xgxfd.moocback.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -82,5 +84,8 @@ public class CourseEvaluationVO implements Serializable {
     private String username;
 
     private String courseName;
+
+
+    private String teacherName;
 
 }

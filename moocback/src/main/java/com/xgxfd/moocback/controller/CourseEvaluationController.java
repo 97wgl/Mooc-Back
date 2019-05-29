@@ -56,13 +56,13 @@ public class CourseEvaluationController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String postCourseEvaluation(@RequestParam("course_id") int course_id,
+    public String postCourseEvaluation(@RequestParam("course_id") String course_id,
                                        @RequestParam("u_id") int u_id,
                                        @RequestParam("score") int score,
                                        @RequestParam("content") String content){
 
         CourseEvaluation courseEvaluation = new CourseEvaluation();
-        courseEvaluation.setCourseId(course_id);
+        courseEvaluation.setCourseId(Integer.parseInt(course_id));
         courseEvaluation.setScore(score);
         courseEvaluation.setContent(content);
 
@@ -118,5 +118,20 @@ public class CourseEvaluationController {
             }
         }
       return  messageVO.getReturnResult(messageVO);
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public String getUserEvaluationStatus(@RequestParam("uId") Integer uId,
+                                          @RequestParam("courseId") Integer courseId){
+
+        CourseEvaluation courseEvaluation = courseEvaluationService.getOne(new QueryWrapper<CourseEvaluation>().eq("u_id",uId).eq("course_id",courseId));
+        MessageVO<String> messageVO;
+        if(courseEvaluation != null){
+            messageVO = new MessageVO<String>(0,"已评价",null);
+        }else{
+            messageVO = new MessageVO<String>(0,"未评价",null);
+        }
+        return messageVO.getReturnResult(messageVO);
     }
 }
