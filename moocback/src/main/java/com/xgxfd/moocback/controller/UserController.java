@@ -146,5 +146,53 @@ public class UserController {
         return  messageVO.getReturnResult(messageVO);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getUser(@RequestParam("u_id") int u_id){
+        User user = userService.getById(u_id);
+        MessageVO<User> messageVO;
+        if(user != null){
+            messageVO = new MessageVO<>(0,"获取用户成功",user);
+        }else {
+            messageVO = new MessageVO<>(-1,"获取用户失败 用户id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
 
+    @PutMapping("/info")
+    @ResponseBody
+    public String putUser(@RequestParam("u_id") int u_id,
+                          @RequestParam("name") String name,
+                          @RequestParam("sex") String sex,
+                          @RequestParam("tel") String tel,
+                          @RequestParam("email") String email,
+                          @RequestParam("remark") String remark){
+
+        User user = userService.getById(u_id);
+        MessageVO<Map<String,String>>  messageVO;
+        if(user != null){
+            user.setName(name);
+            user.setTel(tel);
+            user.setSex(sex);
+            user.setEmail(email);
+            user.setRemark(remark);
+            Boolean flag = userService.updateById(user);
+            if(flag) {
+                Map<String, String> map = new HashMap<>();
+                map.put("userInfo", name);
+                map.put("type", "user");
+                map.put("id", String.valueOf(u_id));
+                messageVO = new MessageVO<>(0, "个人信息修改成功", map);
+            }
+            else{
+                messageVO = new MessageVO<>(-1, "个人信息修改失败", null);
+
+            }
+        }else{
+          messageVO = new MessageVO<>(-1,"u_id异常 用户不存在",null);
+        }
+       return messageVO.getReturnResult(messageVO);
+    }
 }
+
+
