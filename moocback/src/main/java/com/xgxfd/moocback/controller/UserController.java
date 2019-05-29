@@ -49,7 +49,7 @@ public class UserController {
     MailSender mailSender;
 
     @Autowired
-    HostHolder<User> hostHolder;
+    HostHolder hostHolder;
 
     private StringBuffer valid;
 
@@ -130,11 +130,13 @@ public class UserController {
             response.setCharacterEncoding("UTF-8");*/
            // response.setContentType("application/json");
 
+            log.info("当前线程:"+Thread.currentThread());
             hostHolder.setUser(user);//设置hostholder
 
             Map<String,String> map = new HashMap<>();
             map.put("userInfo",username);
             map.put("type","user");
+            map.put("id",user.getUId().toString());
             log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(0,"登录成功",map);
         }else{

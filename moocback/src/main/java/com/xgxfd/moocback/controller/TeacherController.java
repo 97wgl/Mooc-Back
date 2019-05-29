@@ -40,7 +40,7 @@ public class TeacherController {
     TeacherService teacherService;
 
     @Autowired
-    HostHolder<Teacher> hostHolder;
+    HostHolder hostHolder;
 
     @PostMapping("/login")
     @ResponseBody
@@ -65,6 +65,7 @@ public class TeacherController {
             Map<String,String> map = new HashMap<>();
             map.put("userInfo",username);
             map.put("type","teacher");
+            map.put("id",teacher.getTeaId().toString());
             log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<String>(0,"登录成功",map);
         }else{

@@ -45,7 +45,7 @@ public class AdminController {
     AdminService adminService;
 
     @Autowired
-    HostHolder<Admin> hostHolder;
+    HostHolder hostHolder;
 
     @GetMapping("/getList")
     @ResponseBody
@@ -82,7 +82,7 @@ public class AdminController {
             Map<String,String> map = new HashMap<>();
             map.put("userInfo",username);
             map.put("type","admin");
-
+            map.put("id",admin.getAdminId().toString());
             messageVO = new MessageVO<String>(0,"登录成功",map);
         }else{
             log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
