@@ -8,6 +8,7 @@ import com.xgxfd.moocback.entity.CourseEvaluation;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.User;
 import com.xgxfd.moocback.service.CourseEvaluationService;
+import com.xgxfd.moocback.vo.CourseEvaluationVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,11 @@ public class CourseEvaluationController {
                                       @RequestParam("page") int page,
                                       @RequestParam("limit") int limit) {
 
-        Page<CourseEvaluation> courseEvaluationPage = new Page<>(page, limit);
-        IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().eq("course_id",course_id).orderByDesc("time"));
-        List<CourseEvaluation> list = courseEvaluationIPage.getRecords();
-        MessageVO<List<CourseEvaluation>> messageVO = new MessageVO<>(0, "当前所有评价", list);
+        Page<CourseEvaluationVO> courseEvaluationPage = new Page<>(page, limit);
+        //IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().eq("course_id",course_id).orderByDesc("time"));
+        IPage<CourseEvaluationVO> courseEvaluationVOIPage = courseEvaluationService.getCourseAllEvaluationVO(courseEvaluationPage,String.valueOf(course_id));
+        List<CourseEvaluationVO> list = courseEvaluationVOIPage.getRecords();
+        MessageVO<List<CourseEvaluationVO>> messageVO = new MessageVO<>(0, "当前所有评价", list);
         return messageVO.getReturnResult(messageVO);
     }
 
