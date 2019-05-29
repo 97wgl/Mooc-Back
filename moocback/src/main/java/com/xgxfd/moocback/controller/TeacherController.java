@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Xxz Wgl
@@ -32,7 +32,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = "*",
         maxAge = 3600,
-        methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
+        methods = {RequestMethod.DELETE, RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT})
 @Controller
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -47,33 +47,33 @@ public class TeacherController {
     @ResponseBody
     public String userLogin(@RequestParam("username") String username,
                             @RequestParam("password") String password,
-                            HttpServletResponse response){
-        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
-        MessageVO<Map<String,String>> messageVO;
-        if(teacher != null){//登录成功
+                            HttpServletResponse response) {
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name", username).eq("pwd", CommonUtil.MD5(password)));
+        MessageVO<Map<String, String>> messageVO;
+        if (teacher != null) {//登录成功
 
-            Cookie cookie = new Cookie("userInfo",username);
-            Cookie cookie1 = new Cookie("type","teacher");
+            Cookie cookie = new Cookie("userInfo", username);
+            Cookie cookie1 = new Cookie("type", "teacher");
             cookie.setPath("/");
             cookie1.setPath("/");
-            cookie.setMaxAge(3600*24*5);
-            cookie1.setMaxAge(3600*24*5);
+            cookie.setMaxAge(3600 * 24 * 5);
+            cookie1.setMaxAge(3600 * 24 * 5);
             response.addCookie(cookie);
             response.addCookie(cookie1);
 
             hostHolder.setUser(teacher);//设置hostholder
 
-            Map<String,String> map = new HashMap<>();
-            map.put("userInfo",username);
-            map.put("type","teacher");
-            map.put("id",teacher.getTeaId().toString());
-            log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<>(0,"登录成功",map);
-        }else{
-            log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<>(-1,"用户名或密码错误",null);
+            Map<String, String> map = new HashMap<>();
+            map.put("userInfo", username);
+            map.put("type", "teacher");
+            map.put("id", teacher.getTeaId().toString());
+            log.info("登录成功。 登录人：" + username + "登录时间：" + LocalDateTime.now());
+            messageVO = new MessageVO<>(0, "登录成功", map);
+        } else {
+            log.error("登录失败。 登录人：" + username + "登录时间：" + LocalDateTime.now());
+            messageVO = new MessageVO<>(-1, "用户名或密码错误", null);
         }
-        return  messageVO.getReturnResult(messageVO);
+        return messageVO.getReturnResult(messageVO);
     }
 
 
@@ -94,5 +94,24 @@ public class TeacherController {
         }
         return messageVO;
     }
+
+    @GetMapping("info")
+    @ResponseBody
+    public MessageVO<Teacher> getTeacherInfoByid(@RequestParam("teacherId") String teacherId) {
+        Teacher teacher = teacherService.getById(teacherId);
+        MessageVO<Teacher> messageVO = new MessageVO<>();
+        if (teacher == null) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("查询不到id");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            teacher.setPwd("");  // 密码没必要传到前端
+            messageVO.setData(teacher);
+        }
+
+        return messageVO;
+    }
+
 
 }
