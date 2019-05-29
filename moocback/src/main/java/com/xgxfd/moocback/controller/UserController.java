@@ -146,5 +146,28 @@ public class UserController {
         return  messageVO.getReturnResult(messageVO);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getUser(@RequestParam("u_id") int u_id){
+        User user = userService.getById(u_id);
+        MessageVO<User> messageVO;
+        if(user != null){
+            messageVO = new MessageVO<>(0,"获取用户成功",user);
+        }else {
+            messageVO = new MessageVO<>(-1,"获取用户失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
 
+    @PutMapping("/info")
+    @ResponseBody
+    public String putUser(@RequestParam("u_id") int u_id,
+                          @RequestParam("name") int name,
+                          @RequestParam("sex") int sex,
+                          @RequestParam("tel") int tel,
+                          @RequestParam("email") int email){
+
+
+        return null;
+    }
 }
