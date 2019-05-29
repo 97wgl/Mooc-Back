@@ -63,7 +63,7 @@ public class AdminController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Admin admin = adminService.getOne(new QueryWrapper<Admin>().eq("name",username).eq("pwd", CommonUtil.MD5(password)));
-        MessageVO<String> messageVO;
+        MessageVO<Map<String,String>> messageVO;
         if(admin != null){//登录成功
 
             Cookie cookie = new Cookie("userInfo",username);
@@ -83,10 +83,10 @@ public class AdminController {
             map.put("userInfo",username);
             map.put("type","admin");
             map.put("id",admin.getAdminId().toString());
-            messageVO = new MessageVO<String>(0,"登录成功",map);
+            messageVO = new MessageVO<>(0,"登录成功",map);
         }else{
             log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+            messageVO = new MessageVO<>(-1,"用户名或密码错误",null);
         }
 
         return  messageVO.getReturnResult(messageVO);

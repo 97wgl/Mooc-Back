@@ -110,7 +110,7 @@ public class UserController {
                             HttpServletResponse response,
                             HttpServletRequest request){
         User user = userService.getOne(new QueryWrapper<User>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
-        MessageVO<String> messageVO;
+        MessageVO<Map<String,String>> messageVO;
         if(user != null){//登录成功  保存当前用户
 
             Cookie cookie = new Cookie("userInfo",username);
@@ -138,10 +138,10 @@ public class UserController {
             map.put("type","user");
             map.put("id",user.getUId().toString());
             log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(0,"登录成功",map);
+            messageVO = new MessageVO<>(0,"登录成功",map);
         }else{
             log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+            messageVO = new MessageVO<>(-1,"用户名或密码错误",null);
         }
         return  messageVO.getReturnResult(messageVO);
     }

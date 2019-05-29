@@ -11,12 +11,12 @@ public class MessageVO<T> {
 
     private int code;// 0
     private String msg;
-    private Map<T,T> data; //此处 泛型不太会 优化时提交注释
+    private T data; //此处 泛型不太会 优化时提交注释
     public  MessageVO(){
 
     }
 
-    public MessageVO(int code, String msg,Map<T,T> data){
+    public MessageVO(int code, String msg,T data){
         this.code = code;
         this.msg = msg;
         this.data = data;

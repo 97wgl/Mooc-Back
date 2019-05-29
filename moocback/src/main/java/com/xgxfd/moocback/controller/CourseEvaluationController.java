@@ -1,6 +1,9 @@
 package com.xgxfd.moocback.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.CourseEvaluation;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.User;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Controller;
 
 import javax.print.attribute.standard.Media;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,6 +38,18 @@ public class CourseEvaluationController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getCourseEvaluation(@RequestParam("page") int page,
+                                      @RequestParam("limit") int limit) {
+
+        Page<CourseEvaluation> courseEvaluationPage = new Page<>(page, limit);
+        IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().orderByDesc("time"));
+        List<CourseEvaluation> list = courseEvaluationIPage.getRecords();
+        MessageVO<List<CourseEvaluation>> messageVO = new MessageVO<>(0, "当前所有评价", list);
+        return messageVO.getReturnResult(messageVO);
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
