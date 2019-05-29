@@ -31,4 +31,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public CourseInfoVO getCourseInfoById(String courseId) {
         return this.baseMapper.getCourseInfoById(courseId);
     }
+
+    @Override
+    public List<Course> getCourseInfoByClassify(String classify) {
+        return this.baseMapper.getCourseInfoByClassify(classify);
+    }
 }

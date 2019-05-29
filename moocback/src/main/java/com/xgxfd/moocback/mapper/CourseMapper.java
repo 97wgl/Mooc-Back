@@ -22,7 +22,7 @@ import java.util.List;
 public interface CourseMapper extends BaseMapper<Course> {
 
     /**
-     * 查询评分前5的课程
+     * 按评分高低返回课程列表
      * @return
      */
     @Select("SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC")
@@ -33,4 +33,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      */
     @Select("SELECT course.*, ev.score FROM course, (SELECT course_id, AVG(score) score FROM course_evaluation WHERE course_id= #{courseId} GROUP BY course_id) ev WHERE ev.course_id = course.course_id")
     CourseInfoVO getCourseInfoById(@Param("courseId") String courseId);
+
+    /**
+     * 按评分高低返回类型为classify的课程列表
+     * @param classify
+     * @return
+     */
+    @Select("SELECT * FROM (SELECT course.* FROM course  LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC)a WHERE a.classify=#{classify}")
+    List<Course> getCourseInfoByClassify(@Param("classify") String classify);
 }

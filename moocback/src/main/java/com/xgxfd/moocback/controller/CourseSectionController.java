@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Xxz Wgl
@@ -33,6 +33,7 @@ public class CourseSectionController {
 
     /**
      * 获取课程章节列表
+     *
      * @return
      */
     @GetMapping("list")

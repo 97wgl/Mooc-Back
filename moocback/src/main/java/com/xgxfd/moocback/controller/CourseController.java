@@ -158,7 +158,7 @@ public class CourseController {
             log.info("获取最新课程...");
         } else { // 最热
             log.info("获取最热课程！");
-            list = courseService.getCourseInfo(queryWrapper);
+            list = courseService.getCourseInfoByClassify(classify);
         }
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {

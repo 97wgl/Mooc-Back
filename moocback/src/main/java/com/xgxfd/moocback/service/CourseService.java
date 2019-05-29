@@ -17,5 +17,8 @@ import java.util.List;
  */
 public interface CourseService extends IService<Course> {
     List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper);
+
     CourseInfoVO getCourseInfoById(String courseId);
+
+    List<Course> getCourseInfoByClassify(String classify);
 }
