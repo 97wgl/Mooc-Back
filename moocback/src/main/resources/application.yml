@@ -15,6 +15,10 @@ spring:
       template_update_delay: 0
       datetime_format: yyyy-MM-dd HH:mm
       number_format: 0.##
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
   devtools:
     restart:

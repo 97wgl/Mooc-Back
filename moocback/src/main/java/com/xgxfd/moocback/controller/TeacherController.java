@@ -10,11 +10,17 @@ import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -109,9 +115,37 @@ public class TeacherController {
             teacher.setPwd("");  // 密码没必要传到前端
             messageVO.setData(teacher);
         }
-
         return messageVO;
     }
 
+    @PostMapping("/upload")
+    @ResponseBody
+    public MessageVO<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
+        MessageVO<String> messageVO = new MessageVO<>();
+        if (file.isEmpty()) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("上传失败，请选择文件");
+            return messageVO;
+        }
+        String fileName = file.getOriginalFilename();
+        String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\" + type + "\\";
+        log.info(filePath);
+        File dir = new File(filePath);
+        if(!dir.exists()) {
+            dir.mkdir();
+        }
+        File dest = new File(filePath + fileName);
+        try {
+            file.transferTo(dest);
+            log.info("上传成功");
+            messageVO.setCode(0);
+            messageVO.setMsg("上传成功");
+        } catch (IOException e) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("上传失败");
+            log.error(e.toString(), e);
+        }
+        return messageVO;
+    }
 
 }
