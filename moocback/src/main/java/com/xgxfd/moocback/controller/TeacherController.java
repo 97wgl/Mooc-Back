@@ -139,10 +139,10 @@ public class TeacherController {
             file.transferTo(dest);
             log.info("上传成功");
             messageVO.setCode(0);
-            messageVO.setMsg("上传成功");
+            messageVO.setMsg("上传成功！");
         } catch (IOException e) {
             messageVO.setCode(-1);
-            messageVO.setMsg("上传失败");
+            messageVO.setMsg("上传失败！" + e.getMessage());
             log.error(e.toString(), e);
         }
         return messageVO;
