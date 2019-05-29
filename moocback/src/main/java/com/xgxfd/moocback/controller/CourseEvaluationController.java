@@ -8,6 +8,7 @@ import com.xgxfd.moocback.entity.CourseEvaluation;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.User;
 import com.xgxfd.moocback.service.CourseEvaluationService;
+import com.xgxfd.moocback.vo.CourseEvaluationVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,25 +42,27 @@ public class CourseEvaluationController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourseEvaluation(@RequestParam("page") int page,
+    public String getCourseEvaluation(@RequestParam("course_id") int course_id,
+                                      @RequestParam("page") int page,
                                       @RequestParam("limit") int limit) {
 
-        Page<CourseEvaluation> courseEvaluationPage = new Page<>(page, limit);
-        IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().orderByDesc("time"));
-        List<CourseEvaluation> list = courseEvaluationIPage.getRecords();
-        MessageVO<List<CourseEvaluation>> messageVO = new MessageVO<>(0, "当前所有评价", list);
+        Page<CourseEvaluationVO> courseEvaluationPage = new Page<>(page, limit);
+        //IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().eq("course_id",course_id).orderByDesc("time"));
+        IPage<CourseEvaluationVO> courseEvaluationVOIPage = courseEvaluationService.getCourseAllEvaluationVO(courseEvaluationPage,String.valueOf(course_id));
+        List<CourseEvaluationVO> list = courseEvaluationVOIPage.getRecords();
+        MessageVO<List<CourseEvaluationVO>> messageVO = new MessageVO<>(0, "当前所有评价", list);
         return messageVO.getReturnResult(messageVO);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String postCourseEvaluation(@RequestParam("course_id") int course_id,
+    public String postCourseEvaluation(@RequestParam("course_id") String course_id,
                                        @RequestParam("u_id") int u_id,
                                        @RequestParam("score") int score,
                                        @RequestParam("content") String content){
 
         CourseEvaluation courseEvaluation = new CourseEvaluation();
-        courseEvaluation.setCourseId(course_id);
+        courseEvaluation.setCourseId(Integer.parseInt(course_id));
         courseEvaluation.setScore(score);
         courseEvaluation.setContent(content);
 
@@ -115,5 +118,20 @@ public class CourseEvaluationController {
             }
         }
       return  messageVO.getReturnResult(messageVO);
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public String getUserEvaluationStatus(@RequestParam("uId") Integer uId,
+                                          @RequestParam("courseId") Integer courseId){
+
+        CourseEvaluation courseEvaluation = courseEvaluationService.getOne(new QueryWrapper<CourseEvaluation>().eq("u_id",uId).eq("course_id",courseId));
+        MessageVO<String> messageVO;
+        if(courseEvaluation != null){
+            messageVO = new MessageVO<String>(0,"已评价",null);
+        }else{
+            messageVO = new MessageVO<String>(0,"未评价",null);
+        }
+        return messageVO.getReturnResult(messageVO);
     }
 }
