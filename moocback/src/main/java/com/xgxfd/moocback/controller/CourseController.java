@@ -140,4 +140,51 @@ public class CourseController {
         }
         return messageVO;
     }
+
+    @GetMapping("list")
+    @ResponseBody
+    public MessageVO<List<Course>> CourseList(@RequestParam("classify") String classify, @RequestParam(value = "tag", required = true) int tag) {
+        List<Course> list;
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("classify", classify);
+        if (tag == 1) {  // 最新
+            list = courseService.list(queryWrapper);
+            queryWrapper.orderByDesc("publish_time");
+            log.info("获取最新课程...");
+        } else { // 最热
+            log.info("获取最热课程！");
+            list = courseService.getCourseInfo(queryWrapper);
+        }
+        MessageVO<List<Course>> messageVO = new MessageVO<>();
+        if (list.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("data empty");
+            log.info("没有" + classify + "类的课程！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(list);
+            log.info(classify + "类别下有" + list.size() + "门课程！");
+        }
+        return messageVO;
+    }
+
+    @GetMapping("detail")
+    @ResponseBody
+    public MessageVO<Course> courseDetail(@RequestParam("courseId") String courseId) {
+        Course course = courseService.getById(courseId);
+        MessageVO<Course> messageVO = new MessageVO<>();
+        if (course == null) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("不存在该课程！");
+            log.info("没有编号为" + courseId + "的课程！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(course);
+        }
+        return messageVO;
+    }
+
+
 }
