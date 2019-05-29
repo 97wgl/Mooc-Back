@@ -144,10 +144,14 @@ public class CourseController {
 
     @GetMapping("list")
     @ResponseBody
-    public MessageVO<List<Course>> CourseList(@RequestParam("classify") String classify, @RequestParam(value = "tag", required = false) int tag) {
+    public MessageVO<List<Course>> CourseList(@RequestParam(value = "classify", required = false) String classify, @RequestParam(value = "tag", required = false) int tag) {
         List<Course> list;
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("classify", classify);
+        if (classify != null) {
+            queryWrapper.eq("classify", classify);
+        } else {
+            classify = "全部";
+        }
         if (tag == 1) {  // 最新
             list = courseService.list(queryWrapper);
             queryWrapper.orderByDesc("publish_time");
