@@ -7,12 +7,9 @@ import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class CourseController {
      * 权重前5
      * @return
      */
-    @RequestMapping("carousel")
+    @GetMapping("carousel")
     @ResponseBody
     public MessageVO<List<Course>> carouselList() {
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
@@ -58,7 +55,7 @@ public class CourseController {
      * 评分前5
      * @return
      */
-    @RequestMapping("good")
+    @GetMapping("good")
     @ResponseBody
     public MessageVO<List<Course>> goodCourses() {
         List<Course> list = courseService.getCourseInfo(new QueryWrapper<Course>().last("limit 5"));
@@ -74,7 +71,7 @@ public class CourseController {
         return messageVO;
     }
 
-    @RequestMapping("classify")
+    @GetMapping("classify")
     @ResponseBody
     public MessageVO<List<Course>> findOfClassify(@RequestParam("classify") String classify) {
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
@@ -94,7 +91,7 @@ public class CourseController {
         return messageVO;
     }
 
-    @RequestMapping("all")
+    @GetMapping("all")
     @ResponseBody
     public MessageVO<List<Course>> allCourse() {
         List<Course> list = courseService.list();

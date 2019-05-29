@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Xxz Wgl
@@ -29,7 +29,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = "*",
         maxAge = 3600,
-        methods = {RequestMethod.DELETE,RequestMethod.POST,RequestMethod.GET,RequestMethod.PUT})
+        methods = {RequestMethod.DELETE, RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT})
 @Controller
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -40,21 +40,21 @@ public class TeacherController {
     @PostMapping("/login")
     @ResponseBody
     public String userLogin(@RequestParam("username") String username,
-                            @RequestParam("password") String password){
-        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
+                            @RequestParam("password") String password) {
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("name", username).eq("pwd", CommonUtil.MD5(password)));
         MessageVO<String> messageVO;
-        if(teacher != null){//登录成功
-            log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(0,"登录成功",null);
-        }else{
-            log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<String>(-1,"用户名或密码错误",null);
+        if (teacher != null) {
+            log.info("登录成功！登录人：" + username + "登录时间：" + LocalDateTime.now());
+            messageVO = new MessageVO<>(0, "登录成功", null);
+        } else {
+            log.error("登录失败！登录人：" + username + "登录时间：" + LocalDateTime.now());
+            messageVO = new MessageVO<>(-1, "用户名或密码错误", null);
         }
-        return  messageVO.getReturnResult(messageVO);
+        return messageVO.getReturnResult(messageVO);
     }
 
 
-    @RequestMapping("famous")
+    @GetMapping("famous")
     @ResponseBody
     public MessageVO<List<Teacher>> famousTeacherList() {
         QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
