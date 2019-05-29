@@ -106,6 +106,7 @@ public class TeacherController {
         } else {
             messageVO.setCode(0);
             messageVO.setMsg("success");
+            teacher.setPwd("");  // 密码没必要传到前端
             messageVO.setData(teacher);
         }
 
