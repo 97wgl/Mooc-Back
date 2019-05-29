@@ -193,6 +193,35 @@ public class UserController {
         }
        return messageVO.getReturnResult(messageVO);
     }
+
+    @PutMapping("/password")
+    @ResponseBody
+    public String putUser(@RequestParam("uId") Integer uId,
+                          @RequestParam("oldPwd") String oldPwd,
+                          @RequestParam("newPwd") String newPwd){
+
+        User user = userService.getById(uId);
+        MessageVO<String> messageVO;
+        if(user != null){
+            User tmp = userService.getOne(new QueryWrapper<User>().eq("pwd",CommonUtil.MD5(oldPwd)).eq("u_id",uId));
+            if(tmp != null){
+
+                tmp.setPwd(CommonUtil.MD5(newPwd));
+                Boolean flag = userService.updateById(tmp);
+                if(flag){
+                    messageVO = new MessageVO<String>(0,"用户密码更新成功",null);
+                }else{
+                    messageVO = new MessageVO<String>(-1,"用户密码更新错误",null);
+                }
+
+            }else{
+                messageVO = new MessageVO<String>(-1,"原密码错误",null);
+            }
+        }else{
+            messageVO = new MessageVO<String>(-1,"用户Id不存在",null);
+        }
+       return messageVO.getReturnResult(messageVO);
+    }
 }
 
 
