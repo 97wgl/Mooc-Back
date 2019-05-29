@@ -1,5 +1,6 @@
 package com.xgxfd.moocback.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.mapper.CourseMapper;
@@ -21,7 +22,7 @@ import java.util.List;
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
 
     @Override
-    public List<Course> getCourseInfo() {
-        return this.baseMapper.getCourseInfo();
+    public List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper) {
+        return this.baseMapper.getCourseInfo(queryWrapper);
     }
 }

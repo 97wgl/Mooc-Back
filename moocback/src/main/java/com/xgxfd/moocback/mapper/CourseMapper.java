@@ -1,6 +1,7 @@
 package com.xgxfd.moocback.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xgxfd.moocback.entity.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -23,6 +24,6 @@ public interface CourseMapper extends BaseMapper<Course> {
      * 查询评分前5的课程
      * @return
      */
-    @Select("SELECT course.* FROM course,(SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev WHERE course.course_id=ev.course_id ORDER BY ev.avg_score LIMIT 5")
-    List<Course> getCourseInfo();
+    @Select("SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC")
+    List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper);
 }

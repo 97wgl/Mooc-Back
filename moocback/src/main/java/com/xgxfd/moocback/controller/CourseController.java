@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
  * 课程表 前端控制器
  * </p>
  *
- * @author Xxz Wgl
+ * @author Wgl
  * @since 2019-05-27
  */
 @Slf4j
@@ -37,7 +38,7 @@ public class CourseController {
      */
     @RequestMapping("carousel")
     @ResponseBody
-    public MessageVO<List<Course>> courselList() {
+    public MessageVO<List<Course>> carouselList() {
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("weight").last("limit 5");
         List<Course> list = courseService.list(queryWrapper);
@@ -60,7 +61,7 @@ public class CourseController {
     @RequestMapping("good")
     @ResponseBody
     public MessageVO<List<Course>> goodCourses() {
-        List<Course> list = courseService.getCourseInfo();
+        List<Course> list = courseService.getCourseInfo(new QueryWrapper<Course>().last("limit 5"));
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {
             messageVO.setCode(-1);
@@ -69,6 +70,44 @@ public class CourseController {
             messageVO.setCode(0);
             messageVO.setMsg("success");
             messageVO.setData(list);
+        }
+        return messageVO;
+    }
+
+    @RequestMapping("classify")
+    @ResponseBody
+    public MessageVO<List<Course>> findOfClassify(@RequestParam("classify") String classify) {
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("classify", classify);
+        List<Course> list = courseService.list(queryWrapper);
+        MessageVO<List<Course>> messageVO = new MessageVO<>();
+        if (list.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("当前分类没有数据！");
+            log.info("没有" + classify + "类的课程！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(list);
+            log.info(classify + "类别下有" + list.size() + "门课程！");
+        }
+        return messageVO;
+    }
+
+    @RequestMapping("all")
+    @ResponseBody
+    public MessageVO<List<Course>> allCourse() {
+        List<Course> list = courseService.list();
+        MessageVO<List<Course>> messageVO = new MessageVO<>();
+        if (list.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("没有数据！");
+            log.info("没有课程！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(list);
+            log.info("共有" + list.size() + "门课程！");
         }
         return messageVO;
     }
