@@ -41,11 +41,12 @@ public class CourseEvaluationController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourseEvaluation(@RequestParam("page") int page,
+    public String getCourseEvaluation(@RequestParam("course_id") int course_id,
+                                      @RequestParam("page") int page,
                                       @RequestParam("limit") int limit) {
 
         Page<CourseEvaluation> courseEvaluationPage = new Page<>(page, limit);
-        IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().orderByDesc("time"));
+        IPage<CourseEvaluation> courseEvaluationIPage = courseEvaluationService.page(courseEvaluationPage,new QueryWrapper<CourseEvaluation>().eq("course_id",course_id).orderByDesc("time"));
         List<CourseEvaluation> list = courseEvaluationIPage.getRecords();
         MessageVO<List<CourseEvaluation>> messageVO = new MessageVO<>(0, "当前所有评价", list);
         return messageVO.getReturnResult(messageVO);
