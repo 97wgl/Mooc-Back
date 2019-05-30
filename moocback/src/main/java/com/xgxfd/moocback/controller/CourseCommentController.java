@@ -3,17 +3,16 @@ package com.xgxfd.moocback.controller;
 
 import com.xgxfd.moocback.entity.CourseComment;
 import com.xgxfd.moocback.service.CourseCommentService;
+import com.xgxfd.moocback.vo.CourseCommentVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.reflect.Member;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -56,5 +55,21 @@ public class CourseCommentController {
         return messageVO.getReturnResult(messageVO);
 
     }
+
+
+    @GetMapping("/section/all")
+    @ResponseBody
+    public String getAllCourseSectionComment(@RequestParam("courseId") Integer courseId,
+                                             @RequestParam("sectionId") Integer sectionId){
+        List<CourseCommentVO> courseCommentVOList = courseCommentService.getAllCourseComment(courseId,sectionId);
+        MessageVO<List<CourseCommentVO>> messageVO;
+        if(courseCommentVOList.size() > 0){
+            messageVO = new MessageVO<List<CourseCommentVO>>(0,"获取当前章节留言与所有回复成功",courseCommentVOList);
+        }else {
+            messageVO = new MessageVO<List<CourseCommentVO>>(-1,"获取当前章节留言与所有回复失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
 
 }
