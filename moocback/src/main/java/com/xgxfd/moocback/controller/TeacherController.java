@@ -155,9 +155,9 @@ public class TeacherController {
         return messageVO;
     }
 
-    @PostMapping("/addCourseInfo")
+    @PostMapping("/course")
     @ResponseBody
-    public MessageVO<String> addCourseInfo(@RequestParam("file") MultipartFile picture,
+    public MessageVO<String> addCourseInfo(@RequestParam("picture") MultipartFile picture,
                                            @RequestParam("teacherId") Integer teacherId,
                                            @RequestParam("courseName") String courseName,
                                            @RequestParam("brief") String brief,
@@ -176,7 +176,8 @@ public class TeacherController {
         if(!dir.exists()) {
             dir.mkdir();
         }
-        fileName = UUID.randomUUID() + fileName.split(".")[1];
+        String[] fileNameSplit = fileName.split("\\.");
+        fileName = UUID.randomUUID() + "." + fileNameSplit[fileNameSplit.length - 1];
         File dest = new File(filePath + fileName);
         try {
             picture.transferTo(dest);
@@ -199,6 +200,22 @@ public class TeacherController {
         return messageVO;
     }
 
-
+    @GetMapping("course")
+    @ResponseBody
+    public MessageVO<List<Course>> courseListOfTeacher(@RequestParam("teacherId") String teacherId) {
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("tea_id", teacherId);
+        List<Course> courseList = courseService.list(queryWrapper);
+        MessageVO<List<Course>> messageVO = new MessageVO<>();
+        if (courseList.size() == 0) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("当前老师没有课程！");
+        } else {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(courseList);
+        }
+        return messageVO;
+    }
 
 }
