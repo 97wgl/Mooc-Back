@@ -4,7 +4,11 @@ import com.xgxfd.moocback.entity.CourseCommentReply;
 import com.xgxfd.moocback.mapper.CourseCommentReplyMapper;
 import com.xgxfd.moocback.service.CourseCommentReplyService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xgxfd.moocback.vo.CourseCommentReplyVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CourseCommentReplyServiceImpl extends ServiceImpl<CourseCommentReplyMapper, CourseCommentReply> implements CourseCommentReplyService {
 
+
+    @Override
+    public List<CourseCommentReplyVO> getAllCourseCommentReply(Integer commentId) {
+        return this.baseMapper.getAllCourseCommentReply(commentId);
+    }
 }

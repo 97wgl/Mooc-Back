@@ -22,12 +22,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CourseEvaluationServiceImpl extends ServiceImpl<CourseEvaluationMapper, CourseEvaluation> implements CourseEvaluationService {
 
-    @Autowired
-    CourseEvaluationMapper courseEvaluationMapper;
 
     @Override
     public IPage<CourseEvaluationVO> getCourseAllEvaluationVO(Page<CourseEvaluationVO> page,String courseId) {
 
-        return courseEvaluationMapper.getCourseEvaluationVO(page,courseId);
+        return this.baseMapper.getCourseEvaluationVO(page,courseId);
     }
 }
