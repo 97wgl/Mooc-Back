@@ -125,6 +125,59 @@ public class TeacherController {
         return messageVO;
     }
 
+    @PutMapping("/info")
+    @ResponseBody
+    public String putTeacherInfo(@RequestBody Teacher teacher){
+
+        Integer teaId = teacher.getTeaId();
+        log.info("传入的teaId:"+teaId);
+        Teacher tmp = teacherService.getById(teaId);
+        MessageVO<Map<String, String>> messageVO;
+        if(tmp != null){
+            Boolean flag = teacherService.updateById(teacher);
+            if(flag){
+                Map<String, String> map = new HashMap<>();
+                map.put("userInfo", teacher.getName());
+                map.put("type", "teacher");
+                map.put("id", String.valueOf(teaId));
+                messageVO = new MessageVO<>(0,"教师信息更新成功",map);
+            }else{
+                messageVO = new MessageVO<>(-1,"教师信息更新失败",null);
+            }
+        }else {
+            messageVO = new MessageVO<>(-1,"教师Id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+    @PutMapping("/password")
+    @ResponseBody
+    public String putTeacherPassword(@RequestParam("teaId") Integer teaId,
+                                     @RequestParam("oldPwd") String oldPwd,
+                                     @RequestParam("newPwd") String newPwd){
+
+        Teacher teacher = teacherService.getById(teaId);
+        MessageVO<String> messageVO;
+        if(teacher != null){
+          Teacher tmp = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId).eq("pwd",CommonUtil.MD5(oldPwd)));
+          if(tmp != null){
+              tmp.setPwd(CommonUtil.MD5(newPwd));
+              Boolean flag = teacherService.updateById(tmp);
+              if(flag){
+                  messageVO = new MessageVO<>(0,"教师修改密码成功",null);
+              }else{
+                  messageVO = new MessageVO<>(-1,"修改密码失败",null);
+              }
+          }else {
+              messageVO = new MessageVO<>(-1,"原密码错误",null);
+          }
+        }else {
+            messageVO = new MessageVO<>(-1,"教师Id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+
     @PostMapping("/upload")
     @ResponseBody
     public MessageVO<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
