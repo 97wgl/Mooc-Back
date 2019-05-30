@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +48,9 @@ public class UserController {
 
     @Autowired
     MailSender mailSender;
+
+    @Autowired
+    TeacherService teacherService;
 
     @Autowired
     HostHolder hostHolder;
@@ -222,6 +226,19 @@ public class UserController {
             messageVO = new MessageVO<String>(-1,"用户Id不存在",null);
         }
        return messageVO.getReturnResult(messageVO);
+    }
+
+    @PostMapping("apply")
+    @ResponseBody
+    public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
+                                          @RequestParam("company") String company,
+                                          @RequestParam("organization") String organization,
+                                          @RequestParam("applyMaterial") MultipartFile applyMaterial) {
+        MessageVO<String> messageVO = new MessageVO<>();
+
+
+
+        return messageVO;
     }
 }
 
