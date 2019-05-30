@@ -191,5 +191,42 @@ public class CourseController {
         return messageVO;
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllCourse(@RequestParam("page") Integer page,
+                               @RequestParam("rows") Integer rows){
+
+        Page<Course> coursePage = new Page<>(page,rows);
+        IPage<Course> courseIPage = courseService.page(coursePage,new QueryWrapper<Course>().orderByAsc("status"));
+        List<Course> list = courseIPage.getRecords();
+        MessageVO<List<Course>> messageVO;
+        if(list.size() > 0){
+            messageVO = new MessageVO<>(0,"获取课程列表成功",list);
+        }else {
+            messageVO = new MessageVO<>(-1,"获取课程列表失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+
+    }
+
+    @PutMapping("/status")
+    @ResponseBody
+    public String putCourseStatus(@RequestParam("courseId") Integer courseId){
+        MessageVO<String> messageVO;
+        Course course = courseService.getById(courseId);
+        if(course != null){
+            course.setStatus("1");
+            Boolean flag = courseService.updateById(course);
+            if(flag){
+                messageVO = new MessageVO<>(0,"课程审核成功",null);
+            }else {
+                messageVO = new MessageVO<>(-1,"课程审核失败",null);
+            }
+        }else {
+            messageVO = new MessageVO<>(-1,"课程Id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
 
 }
