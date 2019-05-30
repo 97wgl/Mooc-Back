@@ -231,11 +231,21 @@ public class UserController {
     @PostMapping("apply")
     @ResponseBody
     public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
-                                          @RequestParam("company") String company,
+                                          @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
                                           @RequestParam("applyMaterial") MultipartFile applyMaterial) {
         MessageVO<String> messageVO = new MessageVO<>();
-
+        User user = userService.getById(userId);
+        Teacher teacher = new Teacher();
+        teacher.setPwd(user.getPwd());
+        teacher.setEmail(user.getEmail());
+        teacher.setHeadImg(user.getHeadImg());
+        teacher.setOrgnization(organization);
+        teacher.setPosition(position);
+        teacher.setName(user.getName());
+        teacher.setSex(user.getSex());
+        teacher.setTel(user.getTel());
+        teacher.setRemark(user.getRemark());
 
 
         return messageVO;

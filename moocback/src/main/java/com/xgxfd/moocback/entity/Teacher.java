@@ -78,5 +78,9 @@ public class Teacher implements Serializable {
      */
     private String status;
 
+    /**
+     * 教师资格审核材料
+     */
+    private String applicationMaterial;
 
 }
