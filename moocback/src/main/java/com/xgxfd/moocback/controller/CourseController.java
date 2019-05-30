@@ -211,11 +211,12 @@ public class CourseController {
 
     @PutMapping("/status")
     @ResponseBody
-    public String putCourseStatus(@RequestParam("courseId") Integer courseId){
+    public String putCourseStatus(@RequestParam("courseId") Integer courseId,
+                                  @RequestParam("res") String res){
         MessageVO<String> messageVO;
         Course course = courseService.getById(courseId);
         if(course != null){
-            course.setStatus("1");
+            course.setStatus(res);
             Boolean flag = courseService.updateById(course);
             if(flag){
                 messageVO = new MessageVO<>(0,"课程审核成功",null);

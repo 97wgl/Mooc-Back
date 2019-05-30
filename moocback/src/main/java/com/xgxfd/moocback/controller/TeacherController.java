@@ -293,12 +293,13 @@ public class TeacherController {
 
     @PutMapping("/status")
     @ResponseBody
-    public String putTeacherStatus(@RequestParam("teaId") Integer teaId){
+    public String putTeacherStatus(@RequestParam("teaId") Integer teaId,
+                                   @RequestParam("res") String res){
 
         MessageVO<String> messageVO;
         Teacher teacher = teacherService.getById(teaId);
         if(teacher != null){
-            teacher.setStatus("1");
+            teacher.setStatus(res);
             Boolean flag = teacherService.updateById(teacher);
             if(flag){
                 messageVO = new MessageVO<>(0,"教师审核成功 可以正常发布课程",null);
