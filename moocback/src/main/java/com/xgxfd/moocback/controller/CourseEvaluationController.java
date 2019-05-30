@@ -128,7 +128,7 @@ public class CourseEvaluationController {
         CourseEvaluation courseEvaluation = courseEvaluationService.getOne(new QueryWrapper<CourseEvaluation>().eq("u_id",uId).eq("course_id",courseId));
         MessageVO<String> messageVO;
         if(courseEvaluation != null){
-            messageVO = new MessageVO<String>(0,"已评价",null);
+            messageVO = new MessageVO<String>(-1,"已评价",null);
         }else{
             messageVO = new MessageVO<String>(0,"未评价",null);
         }
