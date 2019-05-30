@@ -2,6 +2,8 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.imageio.plugins.common.I18N;
 import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.entity.HostHolder;
@@ -269,6 +271,45 @@ public class TeacherController {
             messageVO.setData(courseList);
         }
         return messageVO;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllTeacher(@RequestParam("page") Integer page,
+                                @RequestParam("rows") Integer rows){
+        Page<Teacher> teacherPage = new Page<>(page,rows);
+        IPage<Teacher> teacherIPage1 = teacherService.page(teacherPage,new QueryWrapper<Teacher>().orderByDesc("status"));
+       // IPage<Teacher> teacherIPage2 = teacherService.page(teacherPage,new QueryWrapper<Teacher>().eq("status","1"));
+        List<Teacher> list = teacherIPage1.getRecords();
+        MessageVO<List<Teacher>> messageVO;
+        if(list.size() > 0){
+            messageVO = new MessageVO<>(0,"获取教师列表成功",list);
+        }else{
+            messageVO = new MessageVO<>(-1,"获取教师列表失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+
+    }
+
+    @PutMapping("/status")
+    @ResponseBody
+    public String putTeacherStatus(@RequestParam("teaId") Integer teaId){
+
+        MessageVO<String> messageVO;
+        Teacher teacher = teacherService.getById(teaId);
+        if(teacher != null){
+            teacher.setStatus("1");
+            Boolean flag = teacherService.updateById(teacher);
+            if(flag){
+                messageVO = new MessageVO<>(0,"教师审核成功 可以正常发布课程",null);
+            }else {
+                messageVO = new MessageVO<>(-1,"教师审核失败",null);
+            }
+        }else{
+            messageVO = new MessageVO<>(-1,"教师Id不存在",null);
+
+        }
+       return messageVO.getReturnResult(messageVO);
     }
 
 }
