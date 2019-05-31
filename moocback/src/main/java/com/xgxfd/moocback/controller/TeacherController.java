@@ -2,6 +2,8 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.imageio.plugins.common.I18N;
 import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.entity.CourseSection;
@@ -131,7 +133,60 @@ public class TeacherController {
         return messageVO;
     }
 
-    @PostMapping("upload")
+    @PutMapping("/info")
+    @ResponseBody
+    public String putTeacherInfo(@RequestBody Teacher teacher){
+
+        Integer teaId = teacher.getTeaId();
+        log.info("传入的teaId:"+teaId);
+        Teacher tmp = teacherService.getById(teaId);
+        MessageVO<Map<String, String>> messageVO;
+        if(tmp != null){
+            Boolean flag = teacherService.updateById(teacher);
+            if(flag){
+                Map<String, String> map = new HashMap<>();
+                map.put("userInfo", teacher.getName());
+                map.put("type", "teacher");
+                map.put("id", String.valueOf(teaId));
+                messageVO = new MessageVO<>(0,"教师信息更新成功",map);
+            }else{
+                messageVO = new MessageVO<>(-1,"教师信息更新失败",null);
+            }
+        }else {
+            messageVO = new MessageVO<>(-1,"教师Id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+    @PutMapping("/password")
+    @ResponseBody
+    public String putTeacherPassword(@RequestParam("teaId") Integer teaId,
+                                     @RequestParam("oldPwd") String oldPwd,
+                                     @RequestParam("newPwd") String newPwd){
+
+        Teacher teacher = teacherService.getById(teaId);
+        MessageVO<String> messageVO;
+        if(teacher != null){
+          Teacher tmp = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId).eq("pwd",CommonUtil.MD5(oldPwd)));
+          if(tmp != null){
+              tmp.setPwd(CommonUtil.MD5(newPwd));
+              Boolean flag = teacherService.updateById(tmp);
+              if(flag){
+                  messageVO = new MessageVO<>(0,"教师修改密码成功",null);
+              }else{
+                  messageVO = new MessageVO<>(-1,"修改密码失败",null);
+              }
+          }else {
+              messageVO = new MessageVO<>(-1,"原密码错误",null);
+          }
+        }else {
+            messageVO = new MessageVO<>(-1,"教师Id不存在",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+
+    @PostMapping("/upload")
     @ResponseBody
     public MessageVO<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
         MessageVO<String> messageVO = new MessageVO<>();
@@ -268,6 +323,28 @@ public class TeacherController {
         }
         return messageVO;
     }
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllTeacher(@RequestParam("page") Integer page,
+                                @RequestParam("rows") Integer rows){
+        Page<Teacher> teacherPage = new Page<>(page,rows);
+        IPage<Teacher> teacherIPage1 = teacherService.page(teacherPage,new QueryWrapper<Teacher>().orderByDesc("status"));
+       // IPage<Teacher> teacherIPage2 = teacherService.page(teacherPage,new QueryWrapper<Teacher>().eq("status","1"));
+        List<Teacher> list = teacherIPage1.getRecords();
+        MessageVO<List<Teacher>> messageVO;
+        if(list.size() > 0){
+            messageVO = new MessageVO<>(0,"获取教师列表成功",list);
+        }else{
+            messageVO = new MessageVO<>(-1,"获取教师列表失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+
+    }
+
+    @PutMapping("/status")
+    @ResponseBody
+    public String putTeacherStatus(@RequestParam("teaId") Integer teaId,
+                                   @RequestParam("res") String res){
 
     
 }

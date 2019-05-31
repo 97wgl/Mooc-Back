@@ -22,6 +22,6 @@ public interface CourseCommentReplyMapper extends BaseMapper<CourseCommentReply>
     查看所有的课程章节留言的回复
      */
 
-    @Select("select c.*,d.name as replyToUName from(SELECT a.*,b.name as replyUName FROM course_comment_reply a left join user b on a.reply_u_id = b.u_id where comment_id = #{commentId}) c left join user d on c.reply_to_u_id = d.u_id")
+    @Select("select c.*,d.name as replyToUName from(SELECT a.*,b.name as replyUName FROM course_comment_reply a left join user b on a.reply_u_id = b.u_id where comment_id = #{commentId}) c left join user d on c.reply_to_u_id = d.u_id ORDER BY c.create_time desc")
     List<CourseCommentReplyVO> getAllCourseCommentReply(Integer commentId);
 }

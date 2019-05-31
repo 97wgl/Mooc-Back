@@ -31,4 +31,10 @@ public interface CourseEvaluationMapper extends BaseMapper<CourseEvaluation> {
     @Select("select e.*,IFNULL(d.name,'') as teacherName from(select c.*,a.name as courseName,b.name as username   from course a,user b,course_evaluation c  where c.course_id = #{courseId} and a.course_id = c.course_id and b.u_id = c.u_id) e left join teacher  d on e.tea_id = d.tea_id" )
     IPage<CourseEvaluationVO> getCourseEvaluationVO(Page page,@Param("courseId") String courseId);
 
+
+   /*
+    查询教师相关的课程
+    */
+
+
 }
