@@ -17,4 +17,7 @@ import java.util.List;
 public interface CourseCommentService extends IService<CourseComment> {
 
     List<CourseCommentVO> getAllCourseComment(Integer courseId,Integer sectionId);
+
+    List<CourseCommentVO> getCourseComment(Integer courseId);
+
 }

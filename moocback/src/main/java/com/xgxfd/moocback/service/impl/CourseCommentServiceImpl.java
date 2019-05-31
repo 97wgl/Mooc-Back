@@ -38,4 +38,16 @@ public class CourseCommentServiceImpl extends ServiceImpl<CourseCommentMapper, C
 
         return courseCommentVOList;
     }
+
+    @Override
+    public List<CourseCommentVO> getCourseComment(Integer courseId) {
+        List<CourseCommentVO> courseCommentVOList = this.baseMapper.getCourseComment(courseId);
+
+        for (int i = 0; i < courseCommentVOList.size() ; i++) {
+            int commentId = courseCommentVOList.get(i).getId();
+            List<CourseCommentReplyVO> list = courseCommentReplyMapper.getAllCourseCommentReply(commentId);
+            courseCommentVOList.get(i).setCourseCommentReplyVOList(list);
+        }
+        return courseCommentVOList;
+    }
 }
