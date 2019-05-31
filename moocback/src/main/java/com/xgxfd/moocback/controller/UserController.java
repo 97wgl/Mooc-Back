@@ -8,6 +8,7 @@ import com.xgxfd.moocback.entity.User;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
+import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -47,6 +47,9 @@ public class UserController {
 
     @Autowired
     MailSender mailSender;
+
+    @Autowired
+    TeacherService teacherService;
 
     @Autowired
     HostHolder hostHolder;
@@ -222,6 +225,46 @@ public class UserController {
             messageVO = new MessageVO<String>(-1,"用户Id不存在",null);
         }
        return messageVO.getReturnResult(messageVO);
+    }
+
+    @PostMapping("apply")
+    @ResponseBody
+    public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
+                                          @RequestParam("position") String position,
+                                          @RequestParam("organization") String organization,
+                                          @RequestParam("applyMaterial") MultipartFile[] applyMaterials) {
+        MessageVO<String> messageVO = new MessageVO<>();
+        User user = userService.getById(userId);
+        Teacher teacher = new Teacher();
+        teacher.setPwd(user.getPwd());
+        teacher.setEmail(user.getEmail());
+        teacher.setHeadImg(user.getHeadImg());
+        teacher.setOrgnization(organization);
+        teacher.setPosition(position);
+        teacher.setName(user.getName());
+        teacher.setSex(user.getSex());
+        teacher.setTel(user.getTel());
+        teacher.setRemark(user.getRemark());
+        List<String> fileList = new ArrayList<>();
+        for (MultipartFile multipartFile: applyMaterials) {
+            MessageVO<String> message = new FileUpload().upload(multipartFile, "material");
+            String fileName;
+            if (message.getCode() == -1) {
+                log.info("save failure");
+                messageVO.setCode(-1);
+                messageVO.setMsg("save file failure!");
+                return messageVO;
+            } else {
+                fileName = message.getData();
+            }
+            fileList.add("/material/" + fileName);
+        }
+        teacher.setApplicationMaterial(String.join(";", fileList));
+        teacherService.save(teacher);
+        messageVO.setCode(0);
+        messageVO.setMsg("success");
+        messageVO.setData("提交成功！");
+        return messageVO;
     }
 }
 

@@ -110,7 +110,7 @@ public class TeacherController {
 
     @GetMapping("info")
     @ResponseBody
-    public MessageVO<Teacher> getTeacherInfoByid(@RequestParam("teacherId") String teacherId) {
+    public MessageVO<Teacher> getTeacherInfoById(@RequestParam("teacherId") String teacherId) {
         Teacher teacher = teacherService.getById(teacherId);
         MessageVO<Teacher> messageVO = new MessageVO<>();
         if (teacher == null) {
@@ -125,7 +125,7 @@ public class TeacherController {
         return messageVO;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("upload")
     @ResponseBody
     public MessageVO<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
         MessageVO<String> messageVO = new MessageVO<>();
@@ -155,7 +155,7 @@ public class TeacherController {
         return messageVO;
     }
 
-    @PostMapping("/course")
+    @PostMapping("course")
     @ResponseBody
     public MessageVO<String> addCourseInfo(@RequestParam("picture") MultipartFile picture,
                                            @RequestParam("teacherId") Integer teacherId,
@@ -218,4 +218,7 @@ public class TeacherController {
         return messageVO;
     }
 
+
+
+    
 }
