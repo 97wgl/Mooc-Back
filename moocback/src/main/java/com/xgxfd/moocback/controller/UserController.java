@@ -281,20 +281,7 @@ public class UserController {
             fileList.add("/material/" + fileName);
         }
         teacher.setApplicationMaterial(String.join(";", fileList));
-//        MessageVO<String> message = new FileUpload().upload(applyMaterials, "material");
-//        String fileName;
-//        if (message.getCode() == -1) {
-//            log.info("save failure");
-//            messageVO.setCode(-1);
-//            messageVO.setMsg("save file failure!");
-//            return messageVO;
-//        } else {
-//            log.info("success");
-//            fileName = message.getData();
-//        }
-//        teacher.setApplicationMaterial(fileName);
         teacherService.save(teacher);
-        userService.update(new UpdateWrapper<User>().set("is_teacher", 1).eq("u_id", userId));
         messageVO.setCode(0);
         messageVO.setMsg("success");
         messageVO.setData("提交成功！");
