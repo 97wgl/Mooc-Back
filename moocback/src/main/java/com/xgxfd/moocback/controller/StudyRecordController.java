@@ -67,7 +67,7 @@ public class StudyRecordController {
      */
     @PostMapping("/")
     @ResponseBody
-    public MessageVO<String> addStudyRecord(@RequestParam("uId") Integer uId,
+    public MessageVO<String> addStudyRecord(@RequestParam("userId") Integer uId,
                                             @RequestParam("sectionId") Integer sectionId,
                                             @RequestParam("courseId") Integer courseId) {
         MessageVO<String> messageVO = new MessageVO<>();

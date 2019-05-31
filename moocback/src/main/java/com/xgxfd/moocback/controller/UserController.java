@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -247,7 +248,8 @@ public class UserController {
     public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
                                           @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
-                                          @RequestParam("applyMaterial") MultipartFile[] applyMaterials) {
+                                          @RequestParam(value = "applyMaterial", required = false) MultipartFile[] applyMaterials,
+                                          HttpServletRequest request) {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
         Teacher teacher = new Teacher();
@@ -260,8 +262,10 @@ public class UserController {
         teacher.setSex(user.getSex());
         teacher.setTel(user.getTel());
         teacher.setRemark(user.getRemark());
+        log.info("" + applyMaterials.length);
         List<String> fileList = new ArrayList<>();
-        for (MultipartFile multipartFile: applyMaterials) {
+        List<MultipartFile> files = ((MultipartHttpServletRequest)request).getFiles("applyMaterial");
+        for (MultipartFile multipartFile: files) {
             MessageVO<String> message = new FileUpload().upload(multipartFile, "material");
             String fileName;
             if (message.getCode() == -1) {
@@ -276,6 +280,18 @@ public class UserController {
             fileList.add("/material/" + fileName);
         }
         teacher.setApplicationMaterial(String.join(";", fileList));
+//        MessageVO<String> message = new FileUpload().upload(applyMaterials, "material");
+//        String fileName;
+//        if (message.getCode() == -1) {
+//            log.info("save failure");
+//            messageVO.setCode(-1);
+//            messageVO.setMsg("save file failure!");
+//            return messageVO;
+//        } else {
+//            log.info("success");
+//            fileName = message.getData();
+//        }
+//        teacher.setApplicationMaterial(fileName);
         teacherService.save(teacher);
         messageVO.setCode(0);
         messageVO.setMsg("success");
