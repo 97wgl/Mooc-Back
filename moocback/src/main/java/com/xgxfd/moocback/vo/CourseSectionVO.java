@@ -1,28 +1,20 @@
-package com.xgxfd.moocback.entity;
-
-import java.time.LocalDateTime;
-import java.io.Serializable;
+package com.xgxfd.moocback.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author Xxz Wgl
- * @since 2019-05-27
+ * @author 王桂林
+ * @Title: CourseSectionVO
+ * @ProjectName moocback
+ * @Description: TODO
+ * @date 2019/5/3115:12
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class CourseSection implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class CourseSectionVO {
 
     /**
      * 课程编号
@@ -56,9 +48,17 @@ public class CourseSection implements Serializable {
     private LocalDateTime createTime;
 
     /**
+     * 课程名
+     */
+    private String courseName;
+
+    /**
+     * 章节名
+     */
+    private String sectionName;
+
+    /**
      * 时长，单位秒(s)
      */
     private Integer time;
-
-
 }

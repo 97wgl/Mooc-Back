@@ -42,7 +42,7 @@ public class CourseController {
     @ResponseBody
     public MessageVO<List<Course>> carouselList() {
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("weight").eq("status", 2).last("limit 5");
+        queryWrapper.orderByDesc("weight").eq("status", 1).last("limit 5");
         List<Course> list = courseService.list(queryWrapper);
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {
@@ -63,7 +63,7 @@ public class CourseController {
     @GetMapping("good")
     @ResponseBody
     public MessageVO<List<Course>> goodCourses() {
-        List<Course> list = courseService.getCourseInfo(new QueryWrapper<Course>().eq("status", 2).last("limit 5"));
+        List<Course> list = courseService.getCourseInfo(new QueryWrapper<Course>().eq("status", 1).last("limit 5"));
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {
             messageVO.setCode(-1);

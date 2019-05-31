@@ -2,6 +2,7 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.imageio.plugins.common.I18N;
@@ -361,5 +362,25 @@ public class TeacherController {
 
         }
         return messageVO.getReturnResult(messageVO);
+    }
+
+    /**
+     * 提交课程给管理员审核
+     * @param courseId
+     * @return
+     */
+    @PutMapping("submit")
+    @ResponseBody
+    public MessageVO<String> submitCourse(@RequestParam("courseId") Integer courseId) {
+        MessageVO<String> messageVO = new MessageVO<>();
+        try {
+            courseService.update(new UpdateWrapper<Course>().set("status", 0).eq("course_id", courseId));
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+        } catch (Exception e) {
+            messageVO.setCode(-1);
+            messageVO.setMsg(e.getMessage());
+        }
+        return messageVO;
     }
 }
