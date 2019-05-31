@@ -4,11 +4,14 @@ package com.xgxfd.moocback.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sun.imageio.plugins.common.I18N;
 import com.xgxfd.moocback.entity.Course;
+import com.xgxfd.moocback.entity.CourseSection;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
+import com.xgxfd.moocback.service.CourseSectionService;
 import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.util.CommonUtil;
+import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +55,9 @@ public class TeacherController {
 
     @Autowired
     CourseService courseService;
+
+    @Autowired
+    CourseSectionService courseSectionService;
 
     @Autowired
     HostHolder hostHolder;
@@ -218,7 +224,50 @@ public class TeacherController {
         return messageVO;
     }
 
-
+    /**
+     *
+     * @param courseId  课程编号
+     * @param chapterName  课程名
+     * @param video  章节视频
+     * @param parentId  父章节编号
+     * @return
+     */
+    @PostMapping("course/chapter")
+    @ResponseBody
+    public MessageVO<String> addCourseInfo(@RequestParam("courseId") Integer courseId,
+                                           @RequestParam("chapterName") String chapterName,
+                                           @RequestParam(value = "video", required = false) MultipartFile video,
+                                           @RequestParam("parentId") Integer parentId) {
+        MessageVO<String> messageVO = new MessageVO<>();
+        CourseSection courseSection = new CourseSection();
+        if (video != null) {
+            MessageVO<String> message = new FileUpload().upload(video, "course");
+            String fileName;
+            if (message.getCode() == -1) {
+                log.info("save video failure");
+                messageVO.setCode(-1);
+                messageVO.setMsg("save video failure!");
+                return messageVO;
+            } else {
+                fileName = message.getData();
+            }
+            courseSection.setVideoUrl("/course/" + fileName);
+        }
+        courseSection.setCourseId(courseId);
+        courseSection.setName(chapterName);
+        courseSection.setParentId(parentId);
+        try {
+            courseSectionService.save(courseSection);
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+        } catch (Exception e) {
+            messageVO.setCode(-1);
+            messageVO.setMsg("保存失败！");
+            log.info("保存失败！");
+            log.error(e.getMessage());
+        }
+        return messageVO;
+    }
 
     
 }
