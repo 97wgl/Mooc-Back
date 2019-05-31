@@ -149,7 +149,11 @@ public class UserController {
 
             Map<String,String> map = new HashMap<>();
             map.put("userInfo",username);
-            map.put("type","user");
+            if(user.getIsTeacher().equals("0")){ // 0初始状态
+                map.put("type","user");
+            }else{
+                map.put("type","teacher");
+            }
             map.put("id",user.getUId().toString());
             log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
             messageVO = new MessageVO<>(0,"登录成功",map);
