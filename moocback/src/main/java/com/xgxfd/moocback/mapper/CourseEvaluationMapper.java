@@ -37,4 +37,10 @@ public interface CourseEvaluationMapper extends BaseMapper<CourseEvaluation> {
     */
 
 
+   /*
+      获取用户 被回复的评价
+    */
+   @Select("select a.*,b.name as courseName,c.name as username,d.name as teacherName from course_evaluation a,course b,user c,teacher d where a.u_id = #{uId} and a.is_reply = 1 and a.course_id = b.course_id and a.u_id = c.u_id and a.tea_id = d.tea_id")
+    List<CourseEvaluationVO> getUserBeReplyCourseEvaluationVO(Integer uId);
+
 }

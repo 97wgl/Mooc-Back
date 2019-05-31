@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
 import com.xgxfd.moocback.entity.User;
+import com.xgxfd.moocback.service.CourseEvaluationService;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
+import com.xgxfd.moocback.vo.CourseEvaluationVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,9 @@ public class UserController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    CourseEvaluationService courseEvaluationService;
 
     private StringBuffer valid;
 
@@ -265,6 +270,20 @@ public class UserController {
         messageVO.setMsg("success");
         messageVO.setData("提交成功！");
         return messageVO;
+    }
+
+    @GetMapping("/course-evaluation")
+    @ResponseBody
+    public String getUserCourseEvaluation(@RequestParam("uId") Integer uId){
+
+        List<CourseEvaluationVO> list = courseEvaluationService.getUserBeReplyCourseEvaluationVO(uId);
+        MessageVO<List<CourseEvaluationVO>> messageVO;
+        if(list.size() > 0){
+            messageVO = new MessageVO<>(0,"获取用户被回复的评价成功",list);
+        }else {
+            messageVO = new MessageVO<>(-1,"获取用户被回复的评价失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
     }
 }
 
