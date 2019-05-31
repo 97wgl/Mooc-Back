@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xgxfd.moocback.entity.Admin;
+import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
 import com.xgxfd.moocback.service.AdminService;
+import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,9 @@ public class AdminController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     HostHolder hostHolder;
@@ -91,5 +96,32 @@ public class AdminController {
 
         return  messageVO.getReturnResult(messageVO);
     }
+
+    @PutMapping("/courseWeight")
+    @ResponseBody
+    public String putCourseWeight(@RequestParam("courseIds") String courseIds){
+
+        String[] Ids = courseIds.split(",");
+        List<Integer> courseIdList = new ArrayList<>();
+        for (int i = 0; i < Ids.length; i++) {
+            if(Ids[i].length() > 0){
+                courseIdList.add(Integer.parseInt(Ids[i].trim()));
+            }
+        }
+        MessageVO<String> messageVO;
+        List<Course> list = (List<Course>) courseService.listByIds(courseIdList);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setWeight(100);
+        }
+        Boolean flag = courseService.updateBatchById(list);
+        if(flag){
+            messageVO = new MessageVO<>(0,"设置课程列表权重成功",null);
+        }else{
+            messageVO = new MessageVO<>(0,"设置课程列表权重失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+
 
 }
