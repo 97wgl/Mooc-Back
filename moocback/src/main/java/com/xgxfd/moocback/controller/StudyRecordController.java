@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xgxfd.moocback.entity.StudyRecord;
 import com.xgxfd.moocback.service.StudyRecordService;
 import com.xgxfd.moocback.vo.MessageVO;
+import com.xgxfd.moocback.vo.StudyRecordInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +38,15 @@ public class StudyRecordController {
      */
     @GetMapping("list")
     @ResponseBody
-    public MessageVO<List<StudyRecord>> studyRecords(@RequestParam(value = "courseId", required = false) String courseId,
-                                                     @RequestParam("userId") String userId) {
-        QueryWrapper<StudyRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("u_id", userId);
+    public MessageVO<List<StudyRecordInfoVO>> studyRecords(@RequestParam(value = "courseId", required = false) String courseId,
+                                                           @RequestParam("userId") String userId) {
+        List<StudyRecordInfoVO> list;
         if (courseId != null) {
-            queryWrapper.eq("course_id", courseId);
+            list = studyRecordService.getStudyRecordInfo(userId, courseId);
+        } else {
+            list = studyRecordService.getStudyRecordInfo(userId);
         }
-        List<StudyRecord> list = studyRecordService.list(queryWrapper);
-        MessageVO<List<StudyRecord>> messageVO = new MessageVO<>();
+        MessageVO<List<StudyRecordInfoVO>> messageVO = new MessageVO<>();
         if (list.size() == 0) {
             messageVO.setCode(-1);
             messageVO.setMsg("当前用户没有学习记录！");

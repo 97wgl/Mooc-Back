@@ -255,6 +255,7 @@ public class UserController {
                 messageVO.setMsg("save file failure!");
                 return messageVO;
             } else {
+                log.info("success");
                 fileName = message.getData();
             }
             fileList.add("/material/" + fileName);
