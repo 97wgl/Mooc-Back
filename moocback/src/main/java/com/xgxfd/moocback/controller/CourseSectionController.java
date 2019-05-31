@@ -53,4 +53,20 @@ public class CourseSectionController {
         }
         return messageVO;
     }
+
+    @GetMapping("info")
+    @ResponseBody
+    public MessageVO<CourseSection> courseSectionInfo(@RequestParam("courseSectionId") String courseSectionId) {
+        MessageVO<CourseSection> messageVO = new MessageVO<>();
+        CourseSection courseSection = courseSectionService.getById(courseSectionId);
+        if (courseSection != null) {
+            messageVO.setCode(0);
+            messageVO.setMsg("success");
+            messageVO.setData(courseSection);
+        } else {
+            messageVO.setCode(-1);
+            messageVO.setMsg("获取章节信息失败");
+        }
+        return messageVO;
+    }
 }
