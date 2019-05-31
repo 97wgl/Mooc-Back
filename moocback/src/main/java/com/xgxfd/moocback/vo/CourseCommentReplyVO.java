@@ -41,6 +41,8 @@ public class CourseCommentReplyVO {
 
     private String replyToUName;
 
+    private Integer sectionId;
+
 
 
 
