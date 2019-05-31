@@ -60,11 +60,16 @@ public class CourseCommentController {
     @GetMapping("/section/all")
     @ResponseBody
     public String getAllCourseSectionComment(@RequestParam("courseId") Integer courseId,
-                                             @RequestParam("sectionId") Integer sectionId){
-        List<CourseCommentVO> courseCommentVOList = courseCommentService.getAllCourseComment(courseId,sectionId);
+                                             @RequestParam(value = "sectionId",required = false) Integer sectionId){
+        List<CourseCommentVO> courseCommentVOList;
+        if(sectionId != null){
+            courseCommentVOList = courseCommentService.getAllCourseComment(courseId,sectionId);
+        }else{
+            courseCommentVOList = courseCommentService.getCourseComment(courseId);
+        }
         MessageVO<List<CourseCommentVO>> messageVO;
         if(courseCommentVOList.size() > 0){
-            messageVO = new MessageVO<List<CourseCommentVO>>(0,"获取当前章节留言与所有回复成功",courseCommentVOList);
+            messageVO = new MessageVO<List<CourseCommentVO>>(0,"获取留言与所有回复成功",courseCommentVOList);
         }else {
             messageVO = new MessageVO<List<CourseCommentVO>>(-1,"获取当前章节留言与所有回复失败",null);
         }
