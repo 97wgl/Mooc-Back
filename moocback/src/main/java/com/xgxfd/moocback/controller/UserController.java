@@ -2,6 +2,7 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.xgxfd.moocback.entity.CourseCommentReply;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
@@ -248,7 +249,7 @@ public class UserController {
     public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
                                           @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
-                                          @RequestParam(value = "applyMaterial", required = false) MultipartFile[] applyMaterials,
+                                          @RequestParam("applyMaterial") MultipartFile[] applyMaterials,
                                           HttpServletRequest request) {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
@@ -293,6 +294,7 @@ public class UserController {
 //        }
 //        teacher.setApplicationMaterial(fileName);
         teacherService.save(teacher);
+        userService.update(new UpdateWrapper<User>().set("is_teacher", 1).eq("u_id", userId));
         messageVO.setCode(0);
         messageVO.setMsg("success");
         messageVO.setData("提交成功！");
