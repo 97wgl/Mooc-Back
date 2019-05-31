@@ -6,6 +6,8 @@ import com.xgxfd.moocback.entity.CourseEvaluation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xgxfd.moocback.vo.CourseEvaluationVO;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -17,4 +19,6 @@ import com.xgxfd.moocback.vo.CourseEvaluationVO;
 public interface CourseEvaluationService extends IService<CourseEvaluation> {
 
     IPage<CourseEvaluationVO> getCourseAllEvaluationVO(Page<CourseEvaluationVO> page,String courseId);
+
+    List<CourseEvaluationVO> getUserBeReplyCourseEvaluationVO(Integer uId);
 }

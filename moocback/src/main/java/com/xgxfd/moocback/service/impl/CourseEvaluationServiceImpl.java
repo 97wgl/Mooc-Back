@@ -11,6 +11,8 @@ import javafx.scene.control.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -27,5 +29,10 @@ public class CourseEvaluationServiceImpl extends ServiceImpl<CourseEvaluationMap
     public IPage<CourseEvaluationVO> getCourseAllEvaluationVO(Page<CourseEvaluationVO> page,String courseId) {
 
         return this.baseMapper.getCourseEvaluationVO(page,courseId);
+    }
+
+    @Override
+    public List<CourseEvaluationVO> getUserBeReplyCourseEvaluationVO(Integer uId) {
+        return this.baseMapper.getUserBeReplyCourseEvaluationVO(uId);
     }
 }

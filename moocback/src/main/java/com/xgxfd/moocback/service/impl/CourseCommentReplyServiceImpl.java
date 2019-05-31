@@ -26,4 +26,9 @@ public class CourseCommentReplyServiceImpl extends ServiceImpl<CourseCommentRepl
     public List<CourseCommentReplyVO> getAllCourseCommentReply(Integer commentId) {
         return this.baseMapper.getAllCourseCommentReply(commentId);
     }
+
+    @Override
+    public List<CourseCommentReplyVO> getUserBeReplyCourseComment(Integer uId) {
+        return this.baseMapper.getUserBeReplyCourseComment(uId);
+    }
 }

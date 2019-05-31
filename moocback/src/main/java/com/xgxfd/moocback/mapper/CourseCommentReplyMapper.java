@@ -24,4 +24,11 @@ public interface CourseCommentReplyMapper extends BaseMapper<CourseCommentReply>
 
     @Select("select c.*,d.name as replyToUName from(SELECT a.*,b.name as replyUName FROM course_comment_reply a left join user b on a.reply_u_id = b.u_id where comment_id = #{commentId}) c left join user d on c.reply_to_u_id = d.u_id ORDER BY c.create_time desc")
     List<CourseCommentReplyVO> getAllCourseCommentReply(Integer commentId);
+
+
+    /*
+      获取 用户被回复的留言回复 时间倒序
+     */
+    @Select("select c.*,d.name as replyToUName from(select a.*,b.name as replyUName from course_comment_reply a,user b where a.reply_to_u_id = #{uId} and a.reply_u_id = b.u_id ) c ,user d where c.reply_to_u_id = d.u_id order by create_time desc")
+    List<CourseCommentReplyVO> getUserBeReplyCourseComment (Integer uId);
 }
