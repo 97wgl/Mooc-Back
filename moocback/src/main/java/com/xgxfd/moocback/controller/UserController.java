@@ -2,6 +2,7 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.xgxfd.moocback.entity.CourseCommentReply;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
@@ -248,7 +249,7 @@ public class UserController {
     public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
                                           @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
-                                          @RequestParam(value = "applyMaterial", required = false) MultipartFile[] applyMaterials,
+                                          @RequestParam(value = "applyMaterial", required = false) MultipartFile applyMaterials,
                                           HttpServletRequest request) {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
@@ -262,37 +263,38 @@ public class UserController {
         teacher.setSex(user.getSex());
         teacher.setTel(user.getTel());
         teacher.setRemark(user.getRemark());
-        log.info("" + applyMaterials.length);
-        List<String> fileList = new ArrayList<>();
-        List<MultipartFile> files = ((MultipartHttpServletRequest)request).getFiles("applyMaterial");
-        for (MultipartFile multipartFile: files) {
-            MessageVO<String> message = new FileUpload().upload(multipartFile, "material");
-            String fileName;
-            if (message.getCode() == -1) {
-                log.info("save failure");
-                messageVO.setCode(-1);
-                messageVO.setMsg("save file failure!");
-                return messageVO;
-            } else {
-                log.info("success");
-                fileName = message.getData();
-            }
-            fileList.add("/material/" + fileName);
-        }
-        teacher.setApplicationMaterial(String.join(";", fileList));
-//        MessageVO<String> message = new FileUpload().upload(applyMaterials, "material");
-//        String fileName;
-//        if (message.getCode() == -1) {
-//            log.info("save failure");
-//            messageVO.setCode(-1);
-//            messageVO.setMsg("save file failure!");
-//            return messageVO;
-//        } else {
-//            log.info("success");
-//            fileName = message.getData();
+//        log.info("" + applyMaterials.length);
+//        List<String> fileList = new ArrayList<>();
+//        List<MultipartFile> files = ((MultipartHttpServletRequest)request).getFiles("applyMaterial");
+//        for (MultipartFile multipartFile: files) {
+//            MessageVO<String> message = new FileUpload().upload(multipartFile, "material");
+//            String fileName;
+//            if (message.getCode() == -1) {
+//                log.info("save failure");
+//                messageVO.setCode(-1);
+//                messageVO.setMsg("save file failure!");
+//                return messageVO;
+//            } else {
+//                log.info("success");
+//                fileName = message.getData();
+//            }
+//            fileList.add("/material/" + fileName);
 //        }
-//        teacher.setApplicationMaterial(fileName);
+//        teacher.setApplicationMaterial(String.join(";", fileList));
+        MessageVO<String> message = new FileUpload().upload(applyMaterials, "material");
+        String fileName;
+        if (message.getCode() == -1) {
+            log.info("save failure");
+            messageVO.setCode(-1);
+            messageVO.setMsg("save file failure!");
+            return messageVO;
+        } else {
+            log.info("success");
+            fileName = message.getData();
+        }
+        teacher.setApplicationMaterial(fileName);
         teacherService.save(teacher);
+        userService.update(new UpdateWrapper<User>().set("is_teacher", 1).eq("u_id", userId));
         messageVO.setCode(0);
         messageVO.setMsg("success");
         messageVO.setData("提交成功！");
