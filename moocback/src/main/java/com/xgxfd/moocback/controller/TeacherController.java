@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.imageio.plugins.common.I18N;
-import com.xgxfd.moocback.entity.Course;
-import com.xgxfd.moocback.entity.CourseSection;
-import com.xgxfd.moocback.entity.HostHolder;
-import com.xgxfd.moocback.entity.Teacher;
+import com.xgxfd.moocback.entity.*;
 import com.xgxfd.moocback.service.CourseSectionService;
 import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.service.TeacherService;
+import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
@@ -64,6 +62,9 @@ public class TeacherController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping("/login")
     @ResponseBody
@@ -351,6 +352,12 @@ public class TeacherController {
         Teacher teacher = teacherService.getById(teaId);
         if (teacher != null) {
             teacher.setStatus(res);
+            if(res.trim().equals("1")){ //通过 设置user的isTeacher为1 成为老师
+                User user = userService.getOne(new QueryWrapper<User>().eq("name",teacher.getName()));
+                user.setIsTeacher("1");
+                userService.updateById(user);
+                log.info("管理员审核教师 通过 通过人:"+user.getName());
+            }
             Boolean flag = teacherService.updateById(teacher);
             if (flag) {
                 messageVO = new MessageVO<>(0, "教师审核成功 可以正常发布课程", null);
