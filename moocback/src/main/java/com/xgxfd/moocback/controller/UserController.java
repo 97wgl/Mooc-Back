@@ -125,18 +125,21 @@ public class UserController {
                             @RequestParam("password") String password,
                             HttpServletResponse response,
                             HttpServletRequest request){
-        User user = userService.getOne(new QueryWrapper<User>().eq("name",username).eq("pwd",CommonUtil.MD5(password)));
         MessageVO<Map<String,String>> messageVO;
-        if(user != null){//登录成功  保存当前用户
+        User tmp = userService.getOne(new QueryWrapper<User>().eq("name",username));
+        if(tmp != null) {
+            User user = userService.getOne(new QueryWrapper<User>().eq("name", username).eq("pwd", CommonUtil.MD5(password)));
 
-            Cookie cookie = new Cookie("userInfo",username);
-            Cookie cookie1 = new Cookie("type","user");
-            cookie.setPath("/");
-            cookie1.setPath("/");
-            cookie.setMaxAge(3600*24*5);
-            cookie1.setMaxAge(3600*24*5);
-            response.addCookie(cookie);
-            response.addCookie(cookie1);
+            if (user != null) {//登录成功  保存当前用户
+
+                Cookie cookie = new Cookie("userInfo", username);
+                Cookie cookie1 = new Cookie("type", "user");
+                cookie.setPath("/");
+                cookie1.setPath("/");
+                cookie.setMaxAge(3600 * 24 * 5);
+                cookie1.setMaxAge(3600 * 24 * 5);
+                response.addCookie(cookie);
+                response.addCookie(cookie1);
 
            /* response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
             response.setHeader("Access-Control-Allow-Headers", "Set-Cookie,Timestamp,Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token,Access-Control-Allow-Headers");
@@ -144,24 +147,28 @@ public class UserController {
             response.setHeader("Access-Control-Max-Age", "3600");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             response.setCharacterEncoding("UTF-8");*/
-           // response.setContentType("application/json");
+                // response.setContentType("application/json");
 
-            log.info("当前线程:"+Thread.currentThread());
-            hostHolder.setUser(user);//设置hostholder
+                log.info("当前线程:" + Thread.currentThread());
+                hostHolder.setUser(user);//设置hostholder
 
-            Map<String,String> map = new HashMap<>();
-            map.put("userInfo",username);
-            if(user.getIsTeacher().equals("0")){ // 0初始状态
-                map.put("type","user");
-            }else{
-                map.put("type","teacher");
+                Map<String, String> map = new HashMap<>();
+                map.put("userInfo", username);
+                if (user.getIsTeacher().equals("0")) { // 0初始状态
+                    map.put("type", "user");
+                } else {
+                    map.put("type", "teacher");
+                }
+                map.put("id", user.getUId().toString());
+                log.info("登录成功。 登录人：" + username + "登录时间：" + LocalDateTime.now());
+                messageVO = new MessageVO<>(0, "登录成功", map);
+            } else {
+                log.error("登录失败。 登录人：" + username + "登录时间：" + LocalDateTime.now());
+                messageVO = new MessageVO<>(-1, "用户名或密码错误", null);
             }
-            map.put("id",user.getUId().toString());
-            log.info("登录成功。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<>(0,"登录成功",map);
         }else{
-            log.error("登录失败。 登录人：" + username + "登录时间："+ LocalDateTime.now());
-            messageVO = new MessageVO<>(-1,"用户名或密码错误",null);
+            messageVO = new MessageVO<>(-1, "用户名不存在", null);
+
         }
         return  messageVO.getReturnResult(messageVO);
     }
