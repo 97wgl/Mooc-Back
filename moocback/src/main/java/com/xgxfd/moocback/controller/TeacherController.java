@@ -341,10 +341,6 @@ public class TeacherController {
 
     }
 
-    @PutMapping("/status")
-    @ResponseBody
-    public String putTeacherStatus(@RequestParam("teaId") Integer teaId,
-                                   @RequestParam("res") String res){
 
     
 }
