@@ -110,8 +110,10 @@ public class AdminController {
         }
         MessageVO<String> messageVO;
         List<Course> list = (List<Course>) courseService.listByIds(courseIdList);
+        Integer max = courseService.getOne(new QueryWrapper<Course>().orderByDesc("weight").last("limit 1")).getWeight();
+        log.info("当前 最大权重为" + max);
         for (int i = 0; i < list.size(); i++) {
-            list.get(i).setWeight(100);
+            list.get(i).setWeight(max+ 1);
         }
         Boolean flag = courseService.updateBatchById(list);
         if(flag){
