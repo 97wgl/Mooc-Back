@@ -41,4 +41,13 @@ public interface CourseMapper extends BaseMapper<Course> {
      */
     @Select("SELECT * FROM (SELECT course.* FROM course  LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC)a WHERE a.classify=#{classify}")
     List<Course> getCourseInfoByClassify(@Param("classify") String classify);
+
+    /**
+     * 修改学习人数
+     * @param courseId
+     * @return
+     */
+    @Select("UPDATE course SET study_count = (study_count + 1) WHERE course_id =#{courseId}")
+    void updateStudyCount(@Param("courseId") Integer courseId);
+
 }

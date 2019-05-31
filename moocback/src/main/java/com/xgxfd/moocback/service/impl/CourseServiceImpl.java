@@ -36,4 +36,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getCourseInfoByClassify(String classify) {
         return this.baseMapper.getCourseInfoByClassify(classify);
     }
+
+    @Override
+    public void updateStudyCount(Integer courseId) {
+        this.baseMapper.updateStudyCount(courseId);
+    }
 }
