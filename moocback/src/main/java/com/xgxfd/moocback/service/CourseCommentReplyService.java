@@ -18,4 +18,6 @@ public interface CourseCommentReplyService extends IService<CourseCommentReply> 
 
 
     List<CourseCommentReplyVO> getAllCourseCommentReply(Integer commentId);
+
+    List<CourseCommentReplyVO> getUserBeReplyCourseComment(Integer uId);
 }

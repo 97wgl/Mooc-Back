@@ -2,15 +2,18 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xgxfd.moocback.entity.CourseCommentReply;
 import com.xgxfd.moocback.entity.HostHolder;
 import com.xgxfd.moocback.entity.Teacher;
 import com.xgxfd.moocback.entity.User;
+import com.xgxfd.moocback.service.CourseCommentReplyService;
 import com.xgxfd.moocback.service.CourseEvaluationService;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
+import com.xgxfd.moocback.vo.CourseCommentReplyVO;
 import com.xgxfd.moocback.vo.CourseEvaluationVO;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +61,9 @@ public class UserController {
 
     @Autowired
     CourseEvaluationService courseEvaluationService;
+
+    @Autowired
+    CourseCommentReplyService courseCommentReplyService;
 
     private StringBuffer valid;
 
@@ -282,6 +288,20 @@ public class UserController {
             messageVO = new MessageVO<>(0,"获取用户被回复的评价成功",list);
         }else {
             messageVO = new MessageVO<>(-1,"获取用户被回复的评价失败",null);
+        }
+        return messageVO.getReturnResult(messageVO);
+    }
+
+    @GetMapping("/course-comment-reply")
+    @ResponseBody
+    public  String getUserCourseCommentReply(@RequestParam("uId") Integer uId){
+
+        List<CourseCommentReplyVO> list = courseCommentReplyService.getUserBeReplyCourseComment(uId);
+        MessageVO<List<CourseCommentReplyVO>> messageVO;
+        if(list.size() > 0){
+            messageVO = new MessageVO<>(0,"获取用户被回复的留言回复成功",list);
+        }else {
+            messageVO = new MessageVO<>(-1,"获取用户被回复的留言回复失败",null);
         }
         return messageVO.getReturnResult(messageVO);
     }
