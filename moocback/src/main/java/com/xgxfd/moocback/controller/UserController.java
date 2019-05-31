@@ -8,6 +8,7 @@ import com.xgxfd.moocback.entity.User;
 import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
+import com.xgxfd.moocback.util.FileUpload;
 import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -233,7 +232,7 @@ public class UserController {
     public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
                                           @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
-                                          @RequestParam("applyMaterial") MultipartFile applyMaterial) {
+                                          @RequestParam("applyMaterial") MultipartFile[] applyMaterials) {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
         Teacher teacher = new Teacher();
@@ -246,8 +245,25 @@ public class UserController {
         teacher.setSex(user.getSex());
         teacher.setTel(user.getTel());
         teacher.setRemark(user.getRemark());
-
-
+        List<String> fileList = new ArrayList<>();
+        for (MultipartFile multipartFile: applyMaterials) {
+            MessageVO<String> message = new FileUpload().upload(multipartFile, "material");
+            String fileName;
+            if (message.getCode() == -1) {
+                log.info("save failure");
+                messageVO.setCode(-1);
+                messageVO.setMsg("save file failure!");
+                return messageVO;
+            } else {
+                fileName = message.getData();
+            }
+            fileList.add("/material/" + fileName);
+        }
+        teacher.setApplicationMaterial(String.join(";", fileList));
+        teacherService.save(teacher);
+        messageVO.setCode(0);
+        messageVO.setMsg("success");
+        messageVO.setData("提交成功！");
         return messageVO;
     }
 }
