@@ -105,16 +105,21 @@ public class UserController {
     @ResponseBody
     public String emailSendValid(@RequestParam("email") String email){
 
-        valid = new CommonUtil().registValid(valid);
-        Map<String,Object> map = new HashMap<>();
-        map.put("validCode",valid.toString());
-        Boolean flag = mailSender.sendWithHTMLTemplate(email,"MOOC注册验证码","emailTemplate.ftl",map);
         MessageVO<StringBuffer> messageVO;
-        if(flag) {
-            messageVO = new MessageVO<StringBuffer>(0,"发送验证码成功",null);
-        }
-        else{
-            messageVO = new MessageVO<StringBuffer>(-1,"发送验证码失败",null);
+        User user = userService.getOne(new QueryWrapper<User>().eq("email",email));
+        if(user != null){ //邮箱已存在
+            messageVO = new MessageVO<>(-1,"邮箱已存在",null);
+        }else {
+            valid = new CommonUtil().registValid(valid);
+            Map<String, Object> map = new HashMap<>();
+            map.put("validCode", valid.toString());
+            Boolean flag = mailSender.sendWithHTMLTemplate(email, "MOOC注册验证码", "emailTemplate.ftl", map);
+
+            if (flag) {
+                messageVO = new MessageVO<StringBuffer>(0, "发送验证码成功", null);
+            } else {
+                messageVO = new MessageVO<StringBuffer>(-1, "发送验证码失败", null);
+            }
         }
         return messageVO.getReturnResult(messageVO);
     }
