@@ -185,6 +185,12 @@ public class UserController {
         User user = userService.getById(u_id);
         MessageVO<User> messageVO;
         if(user != null){
+            user.setPwd(""); //密码没必要传回去
+            if(user.getIsTeacher().equals("0")){
+                user.setIsTeacher("user");
+            }else {
+                user.setIsTeacher("teacher");
+            }
             messageVO = new MessageVO<>(0,"获取用户成功",user);
         }else {
             messageVO = new MessageVO<>(-1,"获取用户失败 用户id不存在",null);
@@ -213,7 +219,11 @@ public class UserController {
             if(flag) {
                 Map<String, String> map = new HashMap<>();
                 map.put("userInfo", name);
-                map.put("type", "user");
+                if(user.getIsTeacher().equals("0")) {
+                    map.put("type", "user");
+                }else{
+                    map.put("type", "teacher");
+                }
                 map.put("id", String.valueOf(u_id));
                 messageVO = new MessageVO<>(0, "个人信息修改成功", map);
             }

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.imageio.plugins.common.I18N;
 import com.xgxfd.moocback.entity.*;
 import com.xgxfd.moocback.service.CourseSectionService;
 import com.xgxfd.moocback.service.CourseService;
@@ -13,20 +12,16 @@ import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.FileUpload;
-import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -43,7 +38,6 @@ import java.util.UUID;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
-@Slf4j
 @CrossOrigin(origins = "*",
         maxAge = 3600,
         methods = {RequestMethod.DELETE, RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT})
@@ -51,6 +45,7 @@ import java.util.UUID;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(TeacherController.class);
     @Autowired
     TeacherService teacherService;
 
