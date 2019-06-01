@@ -216,7 +216,17 @@ public class UserController {
             user.setEmail(email);
             user.setRemark(remark);
             Boolean flag = userService.updateById(user);
-            Teacher teacher = teacherService.getById(user.getUId());
+            if(user.getIsTeacher().equals("1")){ //是教师 需要同步修改 教师信息
+                Teacher teacher = teacherService.getById(user.getUId());
+                teacher.setName(name);
+                teacher.setTel(tel);
+                teacher.setSex(sex);
+                teacher.setEmail(email);
+                teacher.setRemark(remark);
+                Boolean flag2 = teacherService.saveOrUpdate(teacher);
+                log.info("同步更新教师信息 ："+ flag2);
+            }
+
             if(flag) {
                 Map<String, String> map = new HashMap<>();
                 map.put("userInfo", name);
