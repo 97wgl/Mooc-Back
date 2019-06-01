@@ -2,7 +2,10 @@ package com.xgxfd.moocback.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.xgxfd.moocback.entity.Course;
 import com.xgxfd.moocback.entity.StudyRecord;
+import com.xgxfd.moocback.service.CourseService;
 import com.xgxfd.moocback.service.StudyRecordService;
 import com.xgxfd.moocback.vo.MessageVO;
 import com.xgxfd.moocback.vo.StudyRecordInfoVO;
@@ -29,6 +32,9 @@ public class StudyRecordController {
 
     @Autowired
     StudyRecordService studyRecordService;
+
+    @Autowired
+    CourseService courseService;
 
     /**
      * 返回某个用户某门课的学习记录
@@ -77,6 +83,11 @@ public class StudyRecordController {
         studyRecord.setUId(uId);
         log.info(studyRecord.toString());
         try {
+            List<StudyRecord> studyRecords = studyRecordService.list(new QueryWrapper<StudyRecord>().eq("u_id", uId));
+            if (studyRecords.size() == 0) {
+                // courseService.updateStudyCount(courseId);
+                courseService.update(new UpdateWrapper<Course>().setSql("study_count = study_count + 1").eq("course_id", courseId));
+            }
             studyRecordService.save(studyRecord);
             messageVO.setCode(0);
             messageVO.setMsg("success");

@@ -21,4 +21,6 @@ public interface CourseService extends IService<Course> {
     CourseInfoVO getCourseInfoById(String courseId);
 
     List<Course> getCourseInfoByClassify(String classify);
+
+    void updateStudyCount(Integer courseId);
 }
