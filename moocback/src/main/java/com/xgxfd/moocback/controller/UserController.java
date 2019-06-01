@@ -216,6 +216,7 @@ public class UserController {
             user.setEmail(email);
             user.setRemark(remark);
             Boolean flag = userService.updateById(user);
+            Teacher teacher = teacherService.getById(user.getUId());
             if(flag) {
                 Map<String, String> map = new HashMap<>();
                 map.put("userInfo", name);
@@ -276,6 +277,7 @@ public class UserController {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
         Teacher teacher = new Teacher();
+        teacher.setTeaId(Integer.parseInt(userId));
         teacher.setPwd(user.getPwd());
         teacher.setEmail(user.getEmail());
         teacher.setHeadImg(user.getHeadImg());

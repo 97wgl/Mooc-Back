@@ -25,7 +25,7 @@ public class Teacher implements Serializable {
     /**
      * 讲师编号
      */
-    @TableId(value = "tea_id", type = IdType.AUTO)
+    /*@TableId(value = "tea_id", type = IdType.AUTO)*/
     private Integer teaId;
 
     /**
