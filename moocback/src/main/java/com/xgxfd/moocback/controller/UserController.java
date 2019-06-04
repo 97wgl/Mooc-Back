@@ -258,7 +258,7 @@ public class UserController {
 
     @PostMapping("apply")
     @ResponseBody
-    public MessageVO<String> applyTeacher(@RequestParam("userId") String userId,
+    public MessageVO<String> applyTeacher(@RequestParam("userId") Integer userId,
                                           @RequestParam("position") String position,
                                           @RequestParam("organization") String organization,
                                           @RequestParam("applyMaterial") MultipartFile[] applyMaterials,
@@ -293,6 +293,7 @@ public class UserController {
             fileList.add("/material/" + fileName);
         }
         teacher.setApplicationMaterial(String.join(";", fileList));
+        teacher.setTeaId(userId);
         teacherService.save(teacher);
         messageVO.setCode(0);
         messageVO.setMsg("success");
