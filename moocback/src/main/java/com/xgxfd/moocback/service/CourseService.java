@@ -25,4 +25,6 @@ public interface CourseService extends IService<Course> {
     void updateStudyCount(Integer courseId);
 
     List<Course> getGoodCourses();
+
+    List<Course> getAllGoodCourses();
 }

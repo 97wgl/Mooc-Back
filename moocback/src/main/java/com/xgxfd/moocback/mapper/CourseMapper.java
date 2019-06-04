@@ -46,8 +46,15 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @param classify
      * @return
      */
-    @Select("SELECT * FROM (SELECT course.* FROM course  LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC)a WHERE a.classify=#{classify}")
+    @Select("SELECT * from (SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC) a WHERE a.`status` = 1 and classify=#{classify}")
     List<Course> getCourseInfoByClassify(@Param("classify") String classify);
+
+    /**
+     * 按评分高低返回课程列表
+     * @return
+     */
+    @Select("SELECT * from (SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC) a WHERE a.`status` = 1")
+    List<Course> getAllGoodCourses();
 
     /**
      * 修改学习人数

@@ -147,7 +147,7 @@ public class CourseController {
     public MessageVO<List<Course>> CourseList(@RequestParam(value = "classify", required = false) String classify, @RequestParam(value = "tag", required = false) int tag) {
         List<Course> list;
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", 2);
+        queryWrapper.eq("status", 1);
         if (classify != null) {
             queryWrapper.eq("classify", classify);
         } else {
@@ -159,7 +159,11 @@ public class CourseController {
             log.info("获取最新课程...");
         } else { // 最热
             log.info("获取最热课程！");
-            list = courseService.getCourseInfoByClassify(classify);
+            if (classify == "全部") {
+                list = courseService.getAllGoodCourses();
+            } else {
+                list = courseService.getCourseInfoByClassify(classify);
+            }
         }
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {

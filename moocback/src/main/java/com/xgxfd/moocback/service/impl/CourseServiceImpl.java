@@ -46,4 +46,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getGoodCourses() {
         return this.baseMapper.getGoodCourses();
     }
+
+    @Override
+    public List<Course> getAllGoodCourses() {
+        return this.baseMapper.getAllGoodCourses();
+    }
 }
