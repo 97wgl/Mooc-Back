@@ -217,13 +217,13 @@ public class UserController {
             user.setRemark(remark);
             Boolean flag = userService.updateById(user);
             if(user.getIsTeacher().equals("1")){ //是教师 需要同步修改 教师信息
-                Teacher teacher = teacherService.getById(user.getUId());
+                Teacher teacher =teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",user.getUId()));
                 teacher.setName(name);
                 teacher.setTel(tel);
                 teacher.setSex(sex);
                 teacher.setEmail(email);
                 teacher.setRemark(remark);
-                Boolean flag2 = teacherService.saveOrUpdate(teacher);
+                Boolean flag2 = teacherService.update(new UpdateWrapper<Teacher>().set("name",name).set("tel",tel).set("sex",sex).set("email",email).set("remark",remark).eq("tea_id",user.getUId()));
                 log.info("同步更新教师信息 ："+ flag2);
             }
 

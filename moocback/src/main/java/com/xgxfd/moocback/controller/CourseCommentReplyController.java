@@ -53,7 +53,7 @@ public class CourseCommentReplyController {
 
         log.info(type);
         if(type.trim().equals("teacher")) { //查找教师对应的用户id
-            String teacherName = teacherService.getById(replyUId).getName();
+            String teacherName = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",replyUId)).getName();
             log.info("1.教师Id：" + replyUId +"教师名：" + teacherName);
             replyUId = userService.getOne(new QueryWrapper<User>().eq("name",teacherName)).getUId();
         }
