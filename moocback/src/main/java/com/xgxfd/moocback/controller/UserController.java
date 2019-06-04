@@ -287,7 +287,7 @@ public class UserController {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
         Teacher teacher = new Teacher();
-        teacher.setTeaId(Integer.parseInt(userId));
+        teacher.setTeaId(userId);
         teacher.setPwd(user.getPwd());
         teacher.setEmail(user.getEmail());
         teacher.setHeadImg(user.getHeadImg());
