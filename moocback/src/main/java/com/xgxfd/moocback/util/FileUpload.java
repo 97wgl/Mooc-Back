@@ -20,8 +20,8 @@ import java.util.UUID;
 @Slf4j
 public class FileUpload {
 
-    private String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\";
-
+    //private String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\";
+    private String filePath = "D:\\慕课远程教育项目\\Mooc-Back\\moocback\\src\\main\\resources\\static\\";
     /**
      *
      * @param file  文件

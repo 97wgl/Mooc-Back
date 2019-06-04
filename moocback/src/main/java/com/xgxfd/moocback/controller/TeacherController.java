@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.imageio.plugins.common.I18N;
 import com.xgxfd.moocback.entity.*;
 import com.xgxfd.moocback.service.CourseSectionService;
 import com.xgxfd.moocback.service.CourseService;
@@ -13,20 +12,16 @@ import com.xgxfd.moocback.service.TeacherService;
 import com.xgxfd.moocback.service.UserService;
 import com.xgxfd.moocback.util.CommonUtil;
 import com.xgxfd.moocback.util.FileUpload;
-import com.xgxfd.moocback.util.MailSender;
 import com.xgxfd.moocback.vo.MessageVO;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -43,7 +38,6 @@ import java.util.UUID;
  * @author Xxz Wgl
  * @since 2019-05-27
  */
-@Slf4j
 @CrossOrigin(origins = "*",
         maxAge = 3600,
         methods = {RequestMethod.DELETE, RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT})
@@ -51,6 +45,7 @@ import java.util.UUID;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(TeacherController.class);
     @Autowired
     TeacherService teacherService;
 
@@ -121,7 +116,7 @@ public class TeacherController {
     @GetMapping("info")
     @ResponseBody
     public MessageVO<Teacher> getTeacherInfoById(@RequestParam("teacherId") String teacherId) {
-        Teacher teacher = teacherService.getById(teacherId);
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teacherId));
         MessageVO<Teacher> messageVO = new MessageVO<>();
         if (teacher == null) {
             messageVO.setCode(-1);
@@ -141,7 +136,7 @@ public class TeacherController {
 
         Integer teaId = teacher.getTeaId();
         log.info("传入的teaId:"+teaId);
-        Teacher tmp = teacherService.getById(teaId);
+        Teacher tmp = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId));
         MessageVO<Map<String, String>> messageVO;
         if(tmp != null){
             Boolean flag = teacherService.updateById(teacher);
@@ -166,7 +161,7 @@ public class TeacherController {
                                      @RequestParam("oldPwd") String oldPwd,
                                      @RequestParam("newPwd") String newPwd){
 
-        Teacher teacher = teacherService.getById(teaId);
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId));
         MessageVO<String> messageVO;
         if(teacher != null){
           Teacher tmp = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId).eq("pwd",CommonUtil.MD5(oldPwd)));
@@ -198,7 +193,8 @@ public class TeacherController {
             return messageVO;
         }
         String fileName = file.getOriginalFilename();
-        String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\" + type + "\\";
+        // String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\" + type + "\\";
+        String filePath = "D:\\慕课远程教育项目\\Mooc-Back\\moocback\\src\\main\\resources\\static\\" + type +"\\";
         log.info(filePath);
         File dir = new File(filePath);
         if(!dir.exists()) {
@@ -233,7 +229,8 @@ public class TeacherController {
             return messageVO;
         }
         String fileName = picture.getOriginalFilename();
-        String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\image\\";
+        //String filePath = "F:\\个人\\彭世维毕业设计\\MOOC\\Project\\Mooc-Back\\moocback\\src\\main\\resources\\static\\image\\";
+        String filePath = "D:\\慕课远程教育项目\\Mooc-Back\\moocback\\src\\main\\resources\\static\\image\\";
         log.info(filePath);
         File dir = new File(filePath);
         if(!dir.exists()) {
@@ -349,16 +346,17 @@ public class TeacherController {
                                    @RequestParam("res") String res) {
 
         MessageVO<String> messageVO;
-        Teacher teacher = teacherService.getById(teaId);
+        log.info("审核的教师Id" + teaId);
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",teaId));
         if (teacher != null) {
-            teacher.setStatus(res);
+            //teacher.setStatus(res);
             if(res.trim().equals("1")){ //通过 设置user的isTeacher为1 成为老师
                 User user = userService.getOne(new QueryWrapper<User>().eq("name",teacher.getName()));
                 user.setIsTeacher("1");
                 userService.updateById(user);
                 log.info("管理员审核教师 通过 通过人:"+user.getName());
             }
-            Boolean flag = teacherService.updateById(teacher);
+            Boolean flag = teacherService.update(new UpdateWrapper<Teacher>().set("status",res).eq("tea_id",teaId));
             if (flag) {
                 messageVO = new MessageVO<>(0, "教师审核成功 可以正常发布课程", null);
             } else {

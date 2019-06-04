@@ -185,6 +185,12 @@ public class UserController {
         User user = userService.getById(u_id);
         MessageVO<User> messageVO;
         if(user != null){
+            user.setPwd(""); //密码没必要传回去
+            if(user.getIsTeacher().equals("0")){
+                user.setIsTeacher("user");
+            }else {
+                user.setIsTeacher("teacher");
+            }
             messageVO = new MessageVO<>(0,"获取用户成功",user);
         }else {
             messageVO = new MessageVO<>(-1,"获取用户失败 用户id不存在",null);
@@ -210,10 +216,25 @@ public class UserController {
             user.setEmail(email);
             user.setRemark(remark);
             Boolean flag = userService.updateById(user);
+            if(user.getIsTeacher().equals("1")){ //是教师 需要同步修改 教师信息
+                Teacher teacher =teacherService.getOne(new QueryWrapper<Teacher>().eq("tea_id",user.getUId()));
+                teacher.setName(name);
+                teacher.setTel(tel);
+                teacher.setSex(sex);
+                teacher.setEmail(email);
+                teacher.setRemark(remark);
+                Boolean flag2 = teacherService.update(new UpdateWrapper<Teacher>().set("name",name).set("tel",tel).set("sex",sex).set("email",email).set("remark",remark).eq("tea_id",user.getUId()));
+                log.info("同步更新教师信息 ："+ flag2);
+            }
+
             if(flag) {
                 Map<String, String> map = new HashMap<>();
                 map.put("userInfo", name);
-                map.put("type", "user");
+                if(user.getIsTeacher().equals("0")) {
+                    map.put("type", "user");
+                }else{
+                    map.put("type", "teacher");
+                }
                 map.put("id", String.valueOf(u_id));
                 messageVO = new MessageVO<>(0, "个人信息修改成功", map);
             }
@@ -266,6 +287,7 @@ public class UserController {
         MessageVO<String> messageVO = new MessageVO<>();
         User user = userService.getById(userId);
         Teacher teacher = new Teacher();
+        teacher.setTeaId(Integer.parseInt(userId));
         teacher.setPwd(user.getPwd());
         teacher.setEmail(user.getEmail());
         teacher.setHeadImg(user.getHeadImg());

@@ -31,7 +31,7 @@ public interface CourseMapper extends BaseMapper<Course> {
     /**
      * 获取课程评分
      */
-    @Select("SELECT course.*, ev.score FROM course, (SELECT course_id, AVG(score) score FROM course_evaluation WHERE course_id= #{courseId} GROUP BY course_id) ev WHERE ev.course_id = course.course_id")
+    @Select("SELECT course.*,AVG(score) score from(SELECT course.*,IFNULL(score,0)score from course left JOIN course_evaluation ON course.course_id = course_evaluation.course_id) a,course where a.course_id=course.course_id and a.course_id = #{courseId} GROUP BY course_id")
     CourseInfoVO getCourseInfoById(@Param("courseId") String courseId);
 
     /**
