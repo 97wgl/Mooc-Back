@@ -29,6 +29,13 @@ public interface CourseMapper extends BaseMapper<Course> {
     List<Course> getCourseInfo(QueryWrapper<Course> queryWrapper);
 
     /**
+     * 好课推荐
+     * @return
+     */
+    @Select("SELECT * from (SELECT course.* FROM course LEFT JOIN (SELECT course_id, AVG(score) avg_score from course_evaluation GROUP BY course_id) ev ON course.course_id=ev.course_id ORDER BY ev.avg_score DESC) a WHERE a.`status` = 1 LIMIT 5")
+    List<Course> getGoodCourses();
+
+    /**
      * 获取课程评分
      */
     @Select("SELECT course.*,AVG(score) score from(SELECT course.*,IFNULL(score,0)score from course left JOIN course_evaluation ON course.course_id = course_evaluation.course_id) a,course where a.course_id=course.course_id and a.course_id = #{courseId} GROUP BY course_id")

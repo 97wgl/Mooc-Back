@@ -63,7 +63,7 @@ public class CourseController {
     @GetMapping("good")
     @ResponseBody
     public MessageVO<List<Course>> goodCourses() {
-        List<Course> list = courseService.getCourseInfo(new QueryWrapper<Course>().eq("status", 1).last("limit 5"));
+        List<Course> list = courseService.getGoodCourses();
         MessageVO<List<Course>> messageVO = new MessageVO<>();
         if (list.size() == 0) {
             messageVO.setCode(-1);

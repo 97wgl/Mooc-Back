@@ -41,4 +41,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public void updateStudyCount(Integer courseId) {
         this.baseMapper.updateStudyCount(courseId);
     }
+
+    @Override
+    public List<Course> getGoodCourses() {
+        return this.baseMapper.getGoodCourses();
+    }
 }
